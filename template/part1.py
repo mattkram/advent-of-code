@@ -7,7 +7,7 @@ INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
 def calculate(input_str: str) -> int:
-    values = [int(s) for s in input_str.split()]  # noqa: F841
+    values = [int(s.strip()) for s in input_str.split() if s.strip()]  # noqa: F841
     # TODO: Put the solution here
     raise ValueError("Cannot find an answer")
 
