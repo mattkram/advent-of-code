@@ -12,13 +12,13 @@ def get_val(string: str, keys: str) -> int:
 
 def calculate(input_str: str) -> int:
     seats = [line.strip() for line in input_str.split()]
-    max_seat_num = 0
+    seat_nums = []
     for seat in seats:
         row = get_val(seat[:7], "FB")
         col = get_val(seat[7:], "LR")
         seat_num = 8 * row + col
-        max_seat_num = max(max_seat_num, seat_num)
-    return max_seat_num
+        seat_nums.append(seat_num)
+    return max(seat_nums)
 
 
 TEST_INPUTS = [
