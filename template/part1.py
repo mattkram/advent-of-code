@@ -1,40 +1,41 @@
 from pathlib import Path
+from typing import List
 
 import pytest
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
+ParsedInput = List[int]
 
-def calculate(input_str: str) -> int:
-    values = [int(s.strip()) for s in input_str.split() if s.strip()]  # noqa: F841
-    # TODO: Put the solution here
+
+def parse(input_str: str) -> ParsedInput:
+    return [int(s.strip()) for s in input_str.split() if s.strip()]  # noqa: F841
+
+
+def calculate(data: ParsedInput) -> int:
     raise ValueError("Cannot find an answer")
 
 
 TEST_INPUTS = [
     (
         """
-        1721
-        979
-        366
-        299
-        675
-        1456
+        some_input
+        abc
         """,
-        514579,
+        11,
     )
 ]
 
 
 @pytest.mark.parametrize("input_str,expected", TEST_INPUTS)
 def test(input_str: str, expected: int) -> None:
-    assert calculate(input_str) == expected
+    assert calculate(parse(input_str)) == expected
 
 
 def main() -> int:
     with INPUTS_FILE.open() as fp:
-        return calculate(fp.read())
+        return calculate(parse(fp.read()))
 
 
 if __name__ == "__main__":
