@@ -1,5 +1,5 @@
+import functools
 from pathlib import Path
-from typing import Dict
 from typing import List
 
 import pytest
@@ -15,32 +15,24 @@ def parse(input_str: str) -> ParsedInput:
 
 
 def calculate(adapters: ParsedInput) -> int:
-
-    cache: Dict[int, int] = {}
-
+    @functools.lru_cache(maxsize=None)
     def get_num_routes(index: int, target: int) -> int:
 
-        try:
-            return cache[index]
-        except KeyError:
-            pass
-
         if adapters[index] == adapters[-1]:
-            total = 1
-        else:
-            smallest_step = adapters[index + 1] - target
+            return 1
 
-            total = 0
-            for i in range(smallest_step, 4):
-                new_target = target + i
-                try:
-                    new_index = adapters[index : index + 4].index(new_target) + index
-                except ValueError:
-                    pass
-                else:
-                    total += get_num_routes(new_index, new_target)
+        smallest_step = adapters[index + 1] - target
 
-        cache[index] = total
+        total = 0
+        for i in range(smallest_step, 4):
+            new_target = target + i
+            try:
+                new_index = adapters[index : index + 4].index(new_target) + index
+            except ValueError:
+                pass
+            else:
+                total += get_num_routes(new_index, new_target)
+
         return total
 
     return get_num_routes(0, 0)
