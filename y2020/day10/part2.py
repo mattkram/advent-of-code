@@ -1,41 +1,34 @@
 import functools
 from pathlib import Path
-from typing import List
+from typing import Set
 
 import pytest
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
-ParsedInput = List[int]
+ParsedInput = Set[int]
 
 
 def parse(input_str: str) -> ParsedInput:
-    return [0] + sorted(int(s.strip()) for s in input_str.split() if s.strip())
+    return set(int(s.strip()) for s in input_str.split() if s.strip())
 
 
 def calculate(adapters: ParsedInput) -> int:
-    @functools.lru_cache(maxsize=None)
-    def get_num_routes(index: int, target: int) -> int:
+    max_adapter = max(adapters)
 
-        if adapters[index] == adapters[-1]:
+    @functools.lru_cache(maxsize=None)
+    def get_num_routes(target: int = 0) -> int:
+        if target == max_adapter:
             return 1
 
-        smallest_step = adapters[index + 1] - target
+        return sum(
+            get_num_routes(new_target)
+            for new_target in range(target + 1, target + 4)
+            if new_target in adapters
+        )
 
-        total = 0
-        for i in range(smallest_step, 4):
-            new_target = target + i
-            try:
-                new_index = adapters[index : index + 4].index(new_target) + index
-            except ValueError:
-                pass
-            else:
-                total += get_num_routes(new_index, new_target)
-
-        return total
-
-    return get_num_routes(0, 0)
+    return get_num_routes()
 
 
 TEST_INPUTS = [
