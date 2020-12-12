@@ -14,35 +14,36 @@ def parse(input_str: str) -> ParsedInput:
     return [0] + sorted(int(s.strip()) for s in input_str.split() if s.strip())
 
 
-def calculate(
-    adapters: ParsedInput, index: int = 0, target: int = 0, cache: Dict[int, int] = None
-) -> int:
+def calculate(adapters: ParsedInput) -> int:
 
-    if cache is None:
-        cache = {}
+    cache: Dict[int, int] = {}
 
-    try:
-        return cache[index]
-    except KeyError:
-        pass
+    def get_num_routes(index: int, target: int) -> int:
 
-    if adapters[index] == adapters[-1]:
-        total = 1
-    else:
-        smallest_step = adapters[index + 1] - target
+        try:
+            return cache[index]
+        except KeyError:
+            pass
 
-        total = 0
-        for i in range(smallest_step, 4):
-            new_target = target + i
-            try:
-                new_index = adapters[index : index + 4].index(new_target) + index
-            except ValueError:
-                pass
-            else:
-                total += calculate(adapters, new_index, new_target, cache)
+        if adapters[index] == adapters[-1]:
+            total = 1
+        else:
+            smallest_step = adapters[index + 1] - target
 
-    cache[index] = total
-    return total
+            total = 0
+            for i in range(smallest_step, 4):
+                new_target = target + i
+                try:
+                    new_index = adapters[index : index + 4].index(new_target) + index
+                except ValueError:
+                    pass
+                else:
+                    total += get_num_routes(new_index, new_target)
+
+        cache[index] = total
+        return total
+
+    return get_num_routes(0, 0)
 
 
 TEST_INPUTS = [
