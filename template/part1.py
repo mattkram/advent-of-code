@@ -10,7 +10,7 @@ ParsedInput = List[int]
 
 
 def parse(input_str: str) -> ParsedInput:
-    return [int(s.strip()) for s in input_str.split() if s.strip()]  # noqa: F841
+    return [int(s.strip()) for s in input_str.split() if s.strip()]
 
 
 def calculate(data: ParsedInput) -> int:
