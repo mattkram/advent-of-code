@@ -21,32 +21,50 @@ def parse(input_str: str) -> ParsedInput:
 def calculate(data: ParsedInput) -> int:
     _, buses = data
 
-    bus_list = [(i, bus) for i, bus in enumerate(buses) if bus is not None]
+    print(buses)
+
+    # Remove Nones and sort with largest step first
+
+    bus_list = [(offset, step) for offset, step in enumerate(buses) if step is not None]
+    bus_list.sort(key=lambda x: x[1], reverse=True)
     print(bus_list)
 
-    t = 0
-    dt = bus_list[0][1]  # max(bus for bus in bus_dict.values())
+    new_bus_list = [
+        (offset - bus_list[0][0], step) for i, (offset, step) in enumerate(bus_list)
+    ]
+    print(new_bus_list)
+
+    time = dt = bus_list[0][1]
     while True:
-        if all((t + i) % bus == 0 for i, bus in bus_list):
+        if all((time + offset) % step == 0 for offset, step in new_bus_list):
             break
-        t += dt
-    return (t // dt) * dt
+        time += dt
+    return time - bus_list[0][0]
+
+
+#    t = 0
+#    dt = bus_list[0][1]  # max(bus for bus in bus_dict.values())
+#    while True:
+#        if all((t + i) % bus == 0 for i, bus in bus_list):
+#            break
+#        t += dt
+#    return (t // dt) * dt
 
 
 TEST_INPUTS = [
     (
         """
         0
-        7,13,x,x,59,x,31,19
+        17,x,13,19
         """,
-        1068781,
+        3417,
     ),
     (
         """
         0
-        17,x,13,19
+        7,13,x,x,59,x,31,19
         """,
-        3417,
+        1068781,
     ),
     (
         """
