@@ -21,34 +21,16 @@ def parse(input_str: str) -> ParsedInput:
 def calculate(data: ParsedInput) -> int:
     _, buses = data
 
-    print(buses)
+    bus_dict = {offset: step for offset, step in enumerate(buses) if step is not None}
 
-    # Remove Nones and sort with largest step first
-
-    bus_list = [(offset, step) for offset, step in enumerate(buses) if step is not None]
-    bus_list.sort(key=lambda x: x[1], reverse=True)
-    print(bus_list)
-
-    new_bus_list = [
-        (offset - bus_list[0][0], step) for i, (offset, step) in enumerate(bus_list)
-    ]
-    print(new_bus_list)
-
-    time = dt = bus_list[0][1]
-    while True:
-        if all((time + offset) % step == 0 for offset, step in new_bus_list):
-            break
-        time += dt
-    return time - bus_list[0][0]
-
-
-#    t = 0
-#    dt = bus_list[0][1]  # max(bus for bus in bus_dict.values())
-#    while True:
-#        if all((t + i) % bus == 0 for i, bus in bus_list):
-#            break
-#        t += dt
-#    return (t // dt) * dt
+    t = 0
+    dt = 1
+    while bus_dict:
+        t += dt
+        for offset, step in dict(bus_dict).items():
+            if (t + offset) % step == 0:
+                dt *= bus_dict.pop(offset)
+    return t
 
 
 TEST_INPUTS = [
