@@ -1,46 +1,48 @@
+import itertools
 import re
 from pathlib import Path
 from typing import Dict
 from typing import List
 from typing import Set
+from typing import Tuple
 
 import pytest
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
-ParsedInput = List[int]
+ClassDict = Dict[str, Set[int]]
+ParsedInput = Tuple[ClassDict, List[int], List[List[int]]]
 
 CLASS_PATTERN = re.compile(r"([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)")
 
 
 def parse(input_str: str) -> ParsedInput:
-    classes, yours, nearby = [s.strip() for s in input_str.split('\n\n') if s.strip()]
-    
-    class_dict: Dict[Set[int]] = {}
+    classes, yours, nearby = [s.strip() for s in input_str.split("\n\n") if s.strip()]
+
+    class_dict: ClassDict = {}
     for c in classes.splitlines():
-        m = CLASS_PATTERN.match(c.strip())
-        key, *ind_str = m.groups()
-        ind = [int(i) for i in ind_str]
-        class_dict[key] = set(range(ind[0], ind[1]+1)) | set(range(ind[2], ind[3]+1))
+        if (m := CLASS_PATTERN.match(c.strip())) :
+            key, *ind_str = m.groups()
+            ind = [int(i) for i in ind_str]
+            class_dict[key] = set(range(ind[0], ind[1] + 1)) | set(
+                range(ind[2], ind[3] + 1)
+            )
+
+    my_list = [int(i) for i in yours.splitlines()[1].split(",")]
 
     nearby_list: List[List[int]] = []
     for n in nearby.splitlines()[1:]:
         nearby_list.append([int(i) for i in n.split(",")])
 
-    return class_dict, None, nearby_list
+    return class_dict, my_list, nearby_list
 
 
 def calculate(data: ParsedInput) -> int:
     classes, _, nearby = data
 
-    all_rules = set()
-    for c in classes.values():
-        all_rules |= c
-
-    num_invalid = 0
-    for n in nearby:
-        num_invalid += sum(r not in all_rules for r in n)
+    all_rules = set(itertools.chain.from_iterable(classes.values()))
+    num_invalid = sum(v for n in nearby for v in n if v not in all_rules)
 
     return num_invalid
 
