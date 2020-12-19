@@ -21,14 +21,14 @@ class Board:
     def __setitem__(self, index: Coordinate, value: bool) -> None:
         self._cells[index] = value
 
-    def get_num_neighbors(self, coords: Coordinate, is_active: bool) -> int:
+    def get_num_active_neighbors(self, coords: Coordinate) -> int:
         (x, y, z) = coords
         num_neighbors = 0
         for (dx, dy, dz) in itertools.product([-1, 0, 1], repeat=3):
             if (dx, dy, dz) == (0, 0, 0):
                 continue
             neighbor_state = self[x + dx, y + dy, z + dz]
-            num_neighbors += int(neighbor_state == is_active)
+            num_neighbors += int(neighbor_state)
         return num_neighbors
 
     @property
@@ -64,22 +64,23 @@ def calculate(board: Board) -> int:
         min_x, min_y, min_z = board.min_dim
         max_x, max_y, max_z = board.max_dim
         changes = {}
-        for x, y, z in itertools.product(
+        for coords in itertools.product(
             range(min_x - 1, max_x + 2),
             range(min_y - 1, max_y + 2),
             range(min_z - 1, max_z + 2),
         ):
-            num_active = board.get_num_neighbors((x, y, z), is_active=True)
-            if board[(x, y, z)]:  # is active
+            num_active = board.get_num_active_neighbors(coords)
+            if board[coords]:  # is active
                 if num_active != 2 and num_active != 3:
-                    changes[(x, y, z)] = False
+                    changes[coords] = False
             else:
                 if num_active == 3:
-                    changes[(x, y, z)] = True
+                    changes[coords] = True
+
         for coords, value in changes.items():
             board[coords] = value
+
     return board.num_active
-    raise ValueError("Cannot find an answer")
 
 
 TEST_INPUTS = [
