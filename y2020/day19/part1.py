@@ -1,7 +1,9 @@
 from collections import deque
+from itertools import product
 from pathlib import Path
 from typing import Dict
 from typing import List
+from typing import Set
 from typing import Tuple
 from typing import Union
 
@@ -53,9 +55,25 @@ def is_valid(msg: Union[str, deque], rules: RulesDict, rule_ind: int = 0) -> boo
     return False
 
 
+def get_combinations(rules: RulesDict, rule_ind: int = 0) -> Set[str]:
+
+    rule = rules[rule_ind]
+
+    if isinstance(rule, str):
+        return {rule}  # Only one combination
+
+    combinations = set()
+    for sub_rule in rules[rule_ind]:
+        combos = [get_combinations(rules, i) for i in sub_rule]  # type: ignore
+        for c in product(*combos):
+            combinations.add("".join(c))
+    return combinations
+
+
 def calculate(data: ParsedInput) -> int:
     rules, messages = data
-    return sum(is_valid(message, rules) for message in messages)
+    combinations = get_combinations(rules)
+    return sum(msg in combinations for msg in messages)
 
 
 TEST_INPUTS = [
