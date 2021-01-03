@@ -30,6 +30,8 @@ def parse(input_str: str) -> ParsedInput:
     * Otherwise the winner of the round is the player with the higher-value card
 
 """
+
+
 GAME_NUM = 0
 
 
@@ -41,19 +43,18 @@ def play_game(decks: ParsedInput) -> int:
     print(f"\n=== Game {game_num} ===\n")
     round_num = 1
 
-    # history = set()
-    MAX_ROUND = 17  # 00000000000000000
+    history = set()
+    MAX_ROUND = 10000000000000000000000
     while all(decks.values()) and round_num <= MAX_ROUND:
-        #        t = tuple(decks[1])
-        #        if t in history:
-        #            return 1
-        #         print(t)
-        #         print(history)
-        #        history.add(t)
-
         print(f"-- Round {round_num} (Game {game_num}) --")
-        for i in [1, 2]:
-            print(f"Player {i}'s deck: {', '.join(str(d) for d in decks[i])}")
+        for i, deck in decks.items():
+            print(f"Player {i}'s deck: {', '.join(str(d) for d in deck)}")
+
+        t = tuple(tuple(deck) for deck in decks.values())
+        if t in history:
+            print("Detected a recursion, player 1 wins!")
+            return 1
+        history.add(t)
 
         value = {i: deck.popleft() for i, deck in decks.items()}
         for i in decks.keys():
@@ -63,15 +64,13 @@ def play_game(decks: ParsedInput) -> int:
             print("Playing a sub-game to determine the winner...")
             new_decks = {i: deque(list(deck)[: value[i]]) for i, deck in decks.items()}
             winner = play_game(new_decks)
-            loser = 1 if winner == 2 else 1
             print(f"...anyway, back to game {game_num}.")
         elif value[1] > value[2]:
             winner = 1
-            loser = 2
         else:
             winner = 2
-            loser = 1
         print(f"Player {winner} wins round {round_num} of game {game_num}!")
+        loser = 1 if winner == 2 else 2
         decks[winner].extend([value[winner], value[loser]])
         print()
         round_num += 1
@@ -86,6 +85,8 @@ def play_game(decks: ParsedInput) -> int:
 
 
 def calculate(decks: ParsedInput) -> int:
+    global GAME_NUM
+    GAME_NUM = 0
     play_game(decks)
     print("== Post-game results ==")
     for i, deck in decks.items():
@@ -114,7 +115,7 @@ TEST_INPUTS = [
         10
         """,
         291,
-    )
+    ),
 ]
 
 
