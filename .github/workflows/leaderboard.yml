@@ -30,3 +30,7 @@ jobs:
       - name: Run Python script
         run: |
           poetry run python .github/leaderboard.py
+        env:
+          LEADERBOARD_ID: ${{ secrets.LEADERBOARD_ID }}
+          SESSION_ID: ${{ secrets.SESSION_ID }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
