@@ -4,6 +4,7 @@ on:
   schedule:
     # 9am Central time, December 1-25
     - cron:  '0 15 1-25 12 *'
+  workflow_dispatch:
 
 jobs:
   publish:
