@@ -1,0 +1,31 @@
+name: Publish Advent of Code Statistics to Slack
+
+on:
+  schedule:
+    # 9am Central time, December 1-25
+    - cron:  '0 15 1-25 12 *'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      - name: Set up python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.6
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies with poetry
+        run: poetry install --no-interaction --extras leaderboard
+
+      - name: Test with pytest
+        run: |
+          python .github/leaderboard.py

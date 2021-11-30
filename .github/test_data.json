@@ -1,0 +1,42 @@
+{
+  "owner_id": "666666",
+  "event": "2021",
+  "members": {
+    "666666": {
+      "global_score": 0,
+      "id": "666666",
+      "local_score": 10,
+      "completion_day_level": {},
+      "last_star_ts": "0",
+      "name": "Matt K",
+      "stars": 9
+    },
+    "777777": {
+      "global_score": 0,
+      "id": "777777",
+      "local_score": 7,
+      "completion_day_level": {},
+      "last_star_ts": "0",
+      "stars": 7,
+      "name": "Chip A"
+    },
+    "8888888": {
+      "last_star_ts": "0",
+      "completion_day_level": {},
+      "name": "Kirby O",
+      "stars": 10,
+      "global_score": 0,
+      "id": "8888888",
+      "local_score": 10
+    },
+    "999999": {
+      "name": "Jerry R",
+      "stars": 8,
+      "completion_day_level": {},
+      "last_star_ts": "0",
+      "local_score": 9,
+      "id": "999999",
+      "global_score": 0
+    }
+  }
+}
