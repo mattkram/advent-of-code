@@ -67,9 +67,24 @@ def get_leaderboard(data: Dict[str, Any]) -> List[MemberScore]:
     return members
 
 
+def get_contest_day() -> int:
+    today = datetime.datetime.today()
+    delta = today - datetime.datetime(today.year, 12, 1)
+    return delta.days
+
+
 def format_leader_message(members: List[MemberScore]) -> str:
     """Format the message to conform to Slack's API."""
     lines = []
+
+    day = get_contest_day()
+    if day < 1:
+        lines.append("The contest hasn't started yet. Here is the current leaderboard:")
+    else:
+        lines.append(
+            f"It is day {get_contest_day()} of Advent of Code! Here is the current leaderboard:"
+        )
+    lines.append("")
 
     # add each member to message
     medals = [":trophy:", ":second_place_medal:", ":third_place_medal:"]
@@ -78,7 +93,8 @@ def format_leader_message(members: List[MemberScore]) -> str:
             f"{medal} *{member.name}* {member.local_score} Points, {member.stars} Stars".strip()
         )
 
-    lines.append(f"\n<{LEADERBOARD_URL}|View Leaderboard Online>")
+    lines.append("")
+    lines.append(f"<{LEADERBOARD_URL}|View Leaderboard Online>")
 
     return "\n".join(lines)
 
