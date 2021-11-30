@@ -21,7 +21,7 @@ jobs:
       - name: Install Poetry
         uses: snok/install-poetry@v1.1.6
         with:
-          virtualenvs-create: false
+          virtualenvs-create: true
           virtualenvs-in-project: true
 
       - name: Install dependencies with poetry
@@ -29,4 +29,4 @@ jobs:
 
       - name: Run Python script
         run: |
-          python .github/leaderboard.py
+          poetry run python .github/leaderboard.py
