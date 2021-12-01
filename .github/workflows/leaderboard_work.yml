@@ -1,4 +1,4 @@
-name: Publish Advent of Code Statistics to Slack
+name: Publish Advent of Code Statistics to Work Slack
 
 on:
   schedule:
@@ -33,4 +33,4 @@ jobs:
         env:
           LEADERBOARD_ID: ${{ secrets.LEADERBOARD_ID }}
           SESSION_ID: ${{ secrets.SESSION_ID }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_WORK }}
