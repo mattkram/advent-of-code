@@ -2,14 +2,23 @@
   "owner_id": "666666",
   "event": "2021",
   "members": {
+    "555555": {
+      "global_score": 0,
+      "id": "555555",
+      "local_score": 3,
+      "completion_day_level": {},
+      "last_star_ts": "0",
+      "name": "Rivers C",
+      "stars": 2
+    },
     "666666": {
       "global_score": 0,
       "id": "666666",
-      "local_score": 10,
+      "local_score": 8,
       "completion_day_level": {},
       "last_star_ts": "0",
       "name": "Matt K",
-      "stars": 9
+      "stars": 10
     },
     "777777": {
       "global_score": 0,

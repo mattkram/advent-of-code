@@ -6,11 +6,13 @@ Modified from the version found at: https://github.com/tomswartz07/AdventOfCodeL
 import datetime
 import os
 import sys
+from collections import defaultdict
 from itertools import zip_longest
 from typing import Any
+from typing import DefaultDict
 from typing import Dict
-from typing import List
 from typing import NamedTuple
+from typing import Set
 
 import requests
 from dotenv import load_dotenv
@@ -49,22 +51,20 @@ def get_data_from_aoc() -> Dict[str, Any]:
     return r.json()
 
 
-def get_leaderboard(data: Dict[str, Any]) -> List[MemberScore]:
+def get_leaderboard(data: Dict[str, Any]) -> Dict[int, Set[MemberScore]]:
     """Handle member lists from AoC leaderboard."""
 
     # get members from json
     members_json = data["members"]
 
-    # get member name, score and stars
-    members = [
-        MemberScore(m["name"], m["local_score"], m["stars"])
-        for m in members_json.values()
-    ]
+    # group members by total number of stars
+    result: DefaultDict[int, Set[MemberScore]] = defaultdict(set)
 
-    # sort members by score, descending
-    members.sort(key=lambda s: (s.local_score, s.stars), reverse=True)
+    for value in members_json.values():
+        member = MemberScore(value["name"], value["local_score"], value["stars"])
+        result[member.stars].add(member)
 
-    return members
+    return result
 
 
 def get_contest_day() -> int:
@@ -73,7 +73,7 @@ def get_contest_day() -> int:
     return delta.days + 1
 
 
-def format_leader_message(members: List[MemberScore]) -> str:
+def format_leader_message(members: Dict[int, Set[MemberScore]]) -> str:
     """Format the message to conform to Slack's API."""
     lines = []
 
@@ -99,10 +99,24 @@ def format_leader_message(members: List[MemberScore]) -> str:
 
     # add each member to message
     medals = [":trophy:", ":second_place_medal:", ":third_place_medal:"]
-    for member, medal in zip_longest(members, medals, fillvalue="       "):
-        lines.append(
-            f"{medal} *{member.name}* {member.local_score} Points, {member.stars} Stars".strip()
-        )
+
+    # sort members by score, descending
+    sorted_star_sets = sorted(members.keys(), reverse=True)
+    for num_stars, medal in zip_longest(sorted_star_sets, medals, fillvalue=""):
+        members_with_stars = members[num_stars]
+        if not members_with_stars:
+            continue
+
+        if num_stars == 0:
+            medal = ""
+
+        if medal:
+            lines.append(f"{medal}    {num_stars} :star:")
+        else:
+            lines.append(f"{num_stars} :star:")
+
+        for member in sorted(members_with_stars):
+            lines.append(f"    - {member.name}")
 
     lines.append(f"\n<{LEADERBOARD_URL}|View Leaderboard Online>")
 
