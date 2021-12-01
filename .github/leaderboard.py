@@ -79,22 +79,37 @@ def format_leader_message(members: List[MemberScore]) -> str:
 
     day = get_contest_day()
     if day < 1:
-        lines.append("The contest hasn't started yet. Here is the current leaderboard:")
+        lines.append("The contest hasn't started yet.")
     else:
         lines.append(
-            f"It is day {get_contest_day()} of Advent of Code! Here is the current leaderboard:"
+            " ".join(
+                [
+                    ":christmas_tree:",
+                    ":star:",
+                    ":santa::skin-tone-3:",
+                    f"Advent of Code Day {day}",
+                    ":mother_christmas::skin-tone-3:",
+                    ":star:",
+                    ":christmas_tree:",
+                ]
+            )
         )
-    lines.append("")
+
+    lines.append("\nHere is the current leaderboard:\n")
 
     # add each member to message
     medals = [":trophy:", ":second_place_medal:", ":third_place_medal:"]
-    for member, medal in zip_longest(members, medals, fillvalue=""):
+    for member, medal in zip_longest(members, medals, fillvalue="       "):
         lines.append(
             f"{medal} *{member.name}* {member.local_score} Points, {member.stars} Stars".strip()
         )
 
-    lines.append("")
-    lines.append(f"<{LEADERBOARD_URL}|View Leaderboard Online>")
+    lines.append(f"\n<{LEADERBOARD_URL}|View Leaderboard Online>")
+
+    lines.append(
+        "\nPlease avoid any spoilers in the main channel and "
+        "place any daily solution chat in the thread below :point_down:"
+    )
 
     return "\n".join(lines)
 
