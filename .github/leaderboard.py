@@ -104,11 +104,8 @@ def format_leader_message(members: Dict[int, Set[MemberScore]]) -> str:
     sorted_star_sets = sorted(members.keys(), reverse=True)
     for num_stars, medal in zip_longest(sorted_star_sets, medals, fillvalue=""):
         members_with_stars = members[num_stars]
-        if not members_with_stars:
+        if not members_with_stars or num_stars == 0:
             continue
-
-        if num_stars == 0:
-            medal = ""
 
         if medal:
             lines.append(f"{medal}    {num_stars} :star:")
