@@ -14,11 +14,7 @@ def parse(input_str: str) -> ParsedInput:
 
 
 def calculate(data: ParsedInput) -> int:
-    result = 0
-    for first, next_ in zip(data[:-1], data[1:]):
-        if next_ > first:
-            result += 1
-    return result
+    return sum(next_ > first for first, next_ in zip(data, data[1:]))
 
 
 TEST_INPUTS = [

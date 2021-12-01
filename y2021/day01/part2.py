@@ -15,11 +15,7 @@ def parse(input_str: str) -> ParsedInput:
 
 def calculate(data: ParsedInput) -> int:
     moving_sum = [sum(data[i : i + 3]) for i in range(len(data) - 2)]
-    result = 0
-    for first, next_ in zip(moving_sum[:-1], moving_sum[1:]):
-        if next_ > first:
-            result += 1
-    return result
+    return sum(next_ > first for first, next_ in zip(moving_sum, moving_sum[1:]))
 
 
 TEST_INPUTS = [
