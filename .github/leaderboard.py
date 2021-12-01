@@ -70,7 +70,7 @@ def get_leaderboard(data: Dict[str, Any]) -> List[MemberScore]:
 def get_contest_day() -> int:
     today = datetime.datetime.today()
     delta = today - datetime.datetime(today.year, 12, 1)
-    return delta.days
+    return delta.days + 1
 
 
 def format_leader_message(members: List[MemberScore]) -> str:
