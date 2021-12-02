@@ -2,15 +2,11 @@ from pathlib import Path
 from typing import List
 from typing import Tuple
 
-import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
-ParsedInput = List[Tuple[str, int]]
 
-
-def parse(input_str: str) -> ParsedInput:
+def parse(input_str: str) -> List[Tuple[str, int]]:
     result = []
     for line in input_str.splitlines():
         if not line.strip():
@@ -20,7 +16,23 @@ def parse(input_str: str) -> ParsedInput:
     return result
 
 
-def calculate(data: ParsedInput) -> int:
+def calculate_part1(input_str: str) -> int:
+    data = parse(input_str)
+    x, z = 0, 0
+    for direction, value in data:
+        if direction == "forward":
+            x += value
+        elif direction == "down":
+            z += value
+        elif direction == "up":
+            z -= value
+        else:
+            raise ValueError
+    return x * z
+
+
+def calculate_part2(input_str: str) -> int:
+    data = parse(input_str)
     horizontal, depth, aim = 0, 0, 0
     for direction, value in data:
         if direction == "forward":
@@ -35,30 +47,12 @@ def calculate(data: ParsedInput) -> int:
     return horizontal * depth
 
 
-TEST_INPUTS = [
-    (
-        """
-        forward 5
-        down 5
-        forward 8
-        up 3
-        down 8
-        forward 2
-        """,
-        900,
-    )
-]
-
-
-@pytest.mark.parametrize("input_str,expected", TEST_INPUTS)
-def test(input_str: str, expected: int) -> None:
-    assert calculate(parse(input_str)) == expected
-
-
-def main() -> int:
+def main() -> None:
     with INPUTS_FILE.open() as fp:
-        return calculate(parse(fp.read()))
+        input_str = fp.read()
+        print(f"The answer to part 1 is {calculate_part1(input_str)}")
+        print(f"The answer to part 2 is {calculate_part2(input_str)}")
 
 
 if __name__ == "__main__":
-    print(f"The answer is {main()}")
+    main()
