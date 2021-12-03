@@ -5,6 +5,20 @@ from typing import List
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
+def int_to_bit_str(num: int, length: int = 0) -> str:
+    return f"{num:0{length}b}"
+
+
+def bit_str_to_ints(string: str) -> List[int]:
+    return [int(s) for s in string]
+
+
+def flip_bits(num: int, count: int) -> int:
+    """Flip the right-most `count` bits in an integer."""
+    mask = ~(~0 >> count << count)
+    return num ^ mask
+
+
 def parse(input_str: str) -> List[str]:
     return [s.strip() for s in input_str.split() if s.strip()]
 
@@ -12,7 +26,7 @@ def parse(input_str: str) -> List[str]:
 def find_most_common(data: List[str], tiebreak_bit: int) -> int:
     """Find the most common bit in each position, and then return as an integer."""
     # Convert each string to a list of ints
-    int_data = [[int(s) for s in line] for line in data]
+    int_data = [bit_str_to_ints(line) for line in data]
 
     result = 0
     for col in zip(*int_data):
@@ -26,7 +40,8 @@ def find_most_common(data: List[str], tiebreak_bit: int) -> int:
 
 def calculate_part1(input_str: str) -> int:
     data = parse(input_str)
-    return find_most_common(data, 1) * find_most_common(data, 0)
+    num_cols = len(data[0])
+    return find_most_common(data, 1) * flip_bits(find_most_common(data, 1), num_cols)
 
 
 def calculate_part2(input_str: str) -> int:
@@ -39,7 +54,8 @@ def calculate_part2(input_str: str) -> int:
         if len(new_data) == 1:
             break
 
-        most_common_string = f"{find_most_common(new_data, 1):0{num_cols}b}"
+        most_common = find_most_common(new_data, 1)
+        most_common_string = int_to_bit_str(most_common, num_cols)
         new_data = [line for line in new_data if line[i] == most_common_string[i]]
 
     oxygen = int(new_data[0], 2)
@@ -49,10 +65,8 @@ def calculate_part2(input_str: str) -> int:
         if len(new_data) == 1:
             break
 
-        most_common_string = f"{find_most_common(new_data, 1):0{num_cols}b}"
-        most_common_string = "".join(
-            "0" if s == "1" else "1" for s in most_common_string
-        )
+        most_common = flip_bits(find_most_common(new_data, 1), num_cols)
+        most_common_string = int_to_bit_str(most_common, num_cols)
         new_data = [line for line in new_data if line[i] == most_common_string[i]]
 
     co2 = int(new_data[0], 2)
