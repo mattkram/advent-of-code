@@ -23,7 +23,7 @@ def parse(input_str: str) -> List[str]:
     return [s.strip() for s in input_str.split() if s.strip()]
 
 
-def find_most_common(data: List[str], tiebreak_bit: int) -> int:
+def find_most_common(data: List[str]) -> int:
     """Find the most common bit in each position, and then return as an integer."""
     # Convert each string to a list of ints
     int_data = [bit_str_to_ints(line) for line in data]
@@ -33,7 +33,7 @@ def find_most_common(data: List[str], tiebreak_bit: int) -> int:
         # Count occurrences of each bit in each column
         c = Counter(col)
         result <<= 1
-        result |= c[tiebreak_bit] >= c[not tiebreak_bit]
+        result |= c[1] >= c[0]
 
     return result
 
@@ -41,20 +41,19 @@ def find_most_common(data: List[str], tiebreak_bit: int) -> int:
 def calculate_part1(input_str: str) -> int:
     data = parse(input_str)
     num_cols = len(data[0])
-    return find_most_common(data, 1) * flip_bits(find_most_common(data, 1), num_cols)
+    return find_most_common(data) * flip_bits(find_most_common(data), num_cols)
 
 
 def calculate_part2(input_str: str) -> int:
     data = parse(input_str)
-    first, *_ = data
-    num_cols = len(first)
+    num_cols = len(data[0])
 
     new_data = list(data)
     for i in range(num_cols):
         if len(new_data) == 1:
             break
 
-        most_common = find_most_common(new_data, 1)
+        most_common = find_most_common(new_data)
         most_common_string = int_to_bit_str(most_common, num_cols)
         new_data = [line for line in new_data if line[i] == most_common_string[i]]
 
@@ -65,7 +64,7 @@ def calculate_part2(input_str: str) -> int:
         if len(new_data) == 1:
             break
 
-        most_common = flip_bits(find_most_common(new_data, 1), num_cols)
+        most_common = flip_bits(find_most_common(new_data), num_cols)
         most_common_string = int_to_bit_str(most_common, num_cols)
         new_data = [line for line in new_data if line[i] == most_common_string[i]]
 
