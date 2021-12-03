@@ -29,10 +29,7 @@ with INPUTS_FILE.open("r") as fp:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (
-            TEST_INPUT,
-            198,
-        ),
+        (TEST_INPUT, 198),
         (READ_INPUT, 4174964),
     ],
 )
@@ -43,10 +40,7 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (
-            TEST_INPUT,
-            230,
-        ),
+        (TEST_INPUT, 230),
         (READ_INPUT, 4474944),
     ],
 )
