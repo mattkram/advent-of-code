@@ -1,6 +1,7 @@
 from collections import Counter
 from pathlib import Path
 from typing import List
+from typing import Tuple
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
@@ -19,8 +20,14 @@ def flip_bits(num: int, count: int) -> int:
     return num ^ mask
 
 
-def parse(input_str: str) -> List[str]:
-    return [s.strip() for s in input_str.split() if s.strip()]
+def extract_bit(num: int, shift: int) -> int:
+    """Extract a bit `shift` positions from the right."""
+    return (num >> shift) & 1
+
+
+def parse(input_str: str) -> Tuple[List[str], int]:
+    lines = [s.strip() for s in input_str.split() if s.strip()]
+    return lines, len(lines[0])
 
 
 def find_most_common(data: List[str]) -> int:
@@ -39,34 +46,40 @@ def find_most_common(data: List[str]) -> int:
 
 
 def calculate_part1(input_str: str) -> int:
-    data = parse(input_str)
-    num_cols = len(data[0])
+    data, num_cols = parse(input_str)
     return find_most_common(data) * flip_bits(find_most_common(data), num_cols)
 
 
 def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)
-    num_cols = len(data[0])
+    data, num_cols = parse(input_str)
 
     new_data = list(data)
-    for i in range(num_cols):
-        if len(new_data) == 1:
-            break
-
+    shift = num_cols - 1
+    while len(new_data) > 1 and shift >= 0:
         most_common = find_most_common(new_data)
-        most_common_string = int_to_bit_str(most_common, num_cols)
-        new_data = [line for line in new_data if line[i] == most_common_string[i]]
+        most_common_bit = extract_bit(most_common, shift)
+
+        new_data = [
+            line
+            for line in new_data
+            if extract_bit(int(line, 2), shift) == most_common_bit
+        ]
+        shift -= 1
 
     oxygen = int(new_data[0], 2)
 
     new_data = list(data)
-    for i in range(num_cols):
-        if len(new_data) == 1:
-            break
-
+    shift = num_cols - 1
+    while len(new_data) > 1 and shift >= 0:
         most_common = flip_bits(find_most_common(new_data), num_cols)
-        most_common_string = int_to_bit_str(most_common, num_cols)
-        new_data = [line for line in new_data if line[i] == most_common_string[i]]
+        most_common_bit = extract_bit(most_common, shift)
+
+        new_data = [
+            line
+            for line in new_data
+            if extract_bit(int(line, 2), shift) == most_common_bit
+        ]
+        shift -= 1
 
     co2 = int(new_data[0], 2)
 
