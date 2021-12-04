@@ -50,7 +50,16 @@ def calculate_part1(input_str: str) -> int:
 
 
 def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
+    draws, boards = parse(input_str)  # noqa: F841
+
+    for i in range(1, len(draws)):
+        history = draws[:i]
+
+        if len(boards) == 1 and winning_board(boards[0], history):
+            return sum_remaining(boards[0], history) * history[-1]
+
+        boards = [board for board in boards if not winning_board(board, history)]
+
     raise ValueError("Cannot find an answer")
 
 
