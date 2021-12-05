@@ -30,7 +30,7 @@ with INPUTS_FILE.open("r") as fp:
     ],
 )
 def test_part1(input_str: str, expected: int) -> None:
-    assert calculate(input_str, consider_diagonals=False) == expected
+    assert calculate(input_str, diagonals=False) == expected
 
 
 @pytest.mark.parametrize(
@@ -41,4 +41,4 @@ def test_part1(input_str: str, expected: int) -> None:
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
-    assert calculate(input_str, consider_diagonals=True) == expected
+    assert calculate(input_str, diagonals=True) == expected

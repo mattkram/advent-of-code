@@ -27,7 +27,7 @@ def parse(input_str: str) -> List[Tuple[Point, Point]]:
     return points
 
 
-def calculate(input_str: str, consider_diagonals: bool = False) -> int:
+def calculate(input_str: str, diagonals: bool = False) -> int:
     point_pairs = parse(input_str)  # noqa: F841
 
     counts: Dict[Point, int] = defaultdict(lambda: 0)
@@ -40,7 +40,7 @@ def calculate(input_str: str, consider_diagonals: bool = False) -> int:
         elif pt_2.y == pt_1.y:
             for x in range(min(pt_1.x, pt_2.x), max(pt_1.x, pt_2.x) + 1):
                 counts[Point(x, pt_1.y)] += 1
-        elif consider_diagonals:
+        elif diagonals:
             dx_sgn = dx // abs(dx)
             dy_sgn = dy // abs(dy)
             x_range = range(pt_1.x, pt_2.x + dx_sgn, dx_sgn)
@@ -54,12 +54,8 @@ def calculate(input_str: str, consider_diagonals: bool = False) -> int:
 def main() -> None:
     with INPUTS_FILE.open() as fp:
         input_str = fp.read()
-        print(
-            f"The answer to part 1 is {calculate(input_str, consider_diagonals=False)}"
-        )
-        print(
-            f"The answer to part 2 is {calculate(input_str, consider_diagonals=True)}"
-        )
+        print(f"The answer to part 1 is {calculate(input_str, diagonals=False)}")
+        print(f"The answer to part 2 is {calculate(input_str, diagonals=True)}")
 
 
 if __name__ == "__main__":
