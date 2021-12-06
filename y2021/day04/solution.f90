@@ -45,15 +45,15 @@ contains
     end subroutine load_data
 
 
-    function is_in_array(val, arr, num) result (is_in)
-        integer, intent(in) :: val, num
+    function is_in_array(val, arr) result (is_in)
+        integer, intent(in) :: val
         integer, intent(in), dimension(:) :: arr
 
         logical :: is_in
         integer :: i
 
         is_in = .false.
-        do i = 1,num
+        do i = 1,size(arr)
             if (val == arr(i)) then
                 is_in = .true.
                 return
@@ -76,21 +76,21 @@ contains
     end subroutine print_board
 
 
-    function is_winning_board(draws, board, num_draws) result (is_winning)
+    function is_winning_board(draws, board) result (is_winning)
         integer, intent(in), dimension(:) :: draws
         integer, intent(in), dimension(5,5) :: board
-        integer, intent(in) :: num_draws
 
+        integer :: num_draws
         logical :: is_winning
-
         integer :: i, ii, row, col, rowi, coli
 
+        num_draws = size(draws)
         is_winning = .false.
 
         do row = 1,5
             do col = 1,5
                 is_winning = .true.
-                if (.not. is_in_array(board(row,col), draws(1:num_draws), num_draws)) then
+                if (.not. is_in_array(board(row,col), draws(1:num_draws))) then
                     is_winning = .false.
                     goto 100
                 end if
@@ -104,7 +104,7 @@ contains
         do coli = 1,5
             do rowi = 1,5
                 is_winning = .true.
-                if (.not. is_in_array(board(rowi,coli), draws(1:num_draws), num_draws)) then
+                if (.not. is_in_array(board(rowi,coli), draws(1:num_draws))) then
                     is_winning = .false.
                     goto 200
                 end if
@@ -120,18 +120,20 @@ contains
     end function is_winning_board
 
 
-    function sum_remaining(draws, board, num_draws) result (rslt)
+    function sum_remaining(draws, board) result (rslt)
         integer, intent(in), dimension(:) :: draws
         integer, intent(in), dimension(5,5) :: board
-        integer, intent(in) :: num_draws
 
+        integer :: num_draws
         integer :: i, j
         integer :: rslt
+
+        num_draws = size(draws)
 
         rslt = 0
         do i=1,5
             do j=1,5
-                if (.not. is_in_array(board(i,j), draws(1:num_draws), num_draws)) then
+                if (.not. is_in_array(board(i,j), draws(1:num_draws))) then
                     rslt = rslt + board(i,j)
                 end if
             end do
@@ -156,8 +158,8 @@ contains
         do i = 1,num_draws
             do j = 1,num_boards
                 board = boards(5*(j-1)+1:5*(j-1)+5, :)
-                if (is_winning_board(draws, board, i)) then
-                    x = sum_remaining(draws, board, i) * draws(i)
+                if (is_winning_board(draws(1:i), board)) then
+                    x = sum_remaining(draws(1:i), board) * draws(i)
                     return
                 end if
             end do
@@ -189,9 +191,9 @@ contains
         do i = 1,num_draws
             do j = 1,num_boards
                 board = boards(5*(j-1)+1:5*(j-1)+5, :)
-                if (is_winning_board(draws, board, i)) then
+                if (is_winning_board(draws(1:i), board)) then
                     if (sum(is_winning) == num_boards - 1 .and. .not. is_winning(j) == 1) then
-                        x = sum_remaining(draws, board, i) * draws(i)
+                        x = sum_remaining(draws(1:i), board) * draws(i)
                         return
                     end if
                     is_winning(j) = 1
