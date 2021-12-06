@@ -4,24 +4,41 @@ module procedures
 contains
     subroutine load_data(filename, draws, boards)
         character(*), intent(in) :: filename
-        integer, intent(out), dimension(:) :: draws
-        integer, intent(out), dimension(:,:) :: boards
+        integer, intent(out), allocatable, dimension(:) :: draws
+        integer, intent(out), allocatable, dimension(:,:) :: boards
 
-        integer i
+        character(len=1000) :: draw_buffer, buffer
 
-!        print *, filename
+        integer :: i, num_lines, num_draws
+
         open(2, file=filename, status="old")
 
-        read (2,*) draws
-!        print *, draws
+        read (2,"(A)") draw_buffer
 
-!        print *, "Puzzle input:"
-        do i = 1,15
+        num_draws = 1
+        do i = 1,len(trim(draw_buffer))
+            if (draw_buffer(i:i) == ",") then
+                num_draws = num_draws + 1
+            end if
+        end do
+
+        num_lines = 0
+        do i = 1,1000
+            read (2,*,end=100) buffer
+            num_lines = num_lines + 1
+        end do
+
+        100 continue
+
+        rewind(2)
+
+        allocate(draws(num_draws))
+        allocate(boards(num_lines, 5))
+
+        read (2,*) draws
+
+        do i = 1,num_lines
             read (2,*) boards(i,:)
-!            print *, boards(i,:)
-!            if (mod(i, 5) == 0) then
-!                print *, ""
-!            end if
         end do
 
         close(2)
@@ -33,12 +50,9 @@ contains
         integer, intent(in), dimension(:) :: arr
 
         logical :: is_in
-
         integer :: i
 
-
         is_in = .false.
-
         do i = 1,num
             if (val == arr(i)) then
                 is_in = .true.
@@ -50,15 +64,14 @@ contains
 
 
     subroutine print_board(board)
+        integer, intent(in), dimension(5,5) :: board
 
-    integer, intent(in), dimension(5,5) :: board
+        integer :: i
 
-    integer :: i
-
-    do i=1,5
-        print *, board(i,:)
-    end do
-    print *, ""
+        do i=1,5
+            print *, board(i,:)
+        end do
+        print *, ""
 
     end subroutine print_board
 
@@ -74,9 +87,6 @@ contains
 
         is_winning = .false.
 
-!        print *, "Board"
-!        call print_board(board)
-
         do row = 1,5
             do col = 1,5
                 is_winning = .true.
@@ -86,8 +96,6 @@ contains
                 end if
             end do
             if (is_winning) then
-!                print *, "Winning board"
-!                call print_board(board)
                 return
             end if
             100 continue
@@ -102,8 +110,6 @@ contains
                 end if
             end do
             if (is_winning) then
-!                print *, "Winning board"
-!                call print_board(board)
                 return
             end if
             200 continue
@@ -121,8 +127,8 @@ contains
 
         integer :: i, j
         integer :: rslt
-        rslt = 0
 
+        rslt = 0
         do i=1,5
             do j=1,5
                 if (.not. is_in_array(board(i,j), draws(1:num_draws), num_draws)) then
@@ -141,14 +147,15 @@ contains
         integer, dimension(5,5) :: board
         integer :: x
 
+        integer :: num_draws, num_boards
         integer :: i, j, k
 
-        do i = 1,27
-            do j = 1,3
-                board = boards(5*(j-1)+1:5*(j-1)+5, :)
-!                print *, "Board ", j
-!                call print_board(board)
+        num_draws = size(draws, 1)
+        num_boards = size(boards, 1) / 5
 
+        do i = 1,num_draws
+            do j = 1,num_boards
+                board = boards(5*(j-1)+1:5*(j-1)+5, :)
                 if (is_winning_board(draws, board, i)) then
                     x = sum_remaining(draws, board, i) * draws(i)
                     return
@@ -168,18 +175,22 @@ contains
         integer, dimension(5,5) :: board
         integer :: x
 
+        integer :: num_draws, num_boards
         integer :: i, j, k, m
 
-        integer, dimension(3) :: is_winning
-        do m=1,3
-            is_winning(m) = 0
-        end do
+        integer, allocatable, dimension(:) :: is_winning
 
-        do i = 1,27
-            do j = 1,3
+        num_draws = size(draws, 1)
+        num_boards = size(boards, 1) / 5
+
+        allocate(is_winning(num_boards))
+
+        is_winning = 0
+        do i = 1,num_draws
+            do j = 1,num_boards
                 board = boards(5*(j-1)+1:5*(j-1)+5, :)
                 if (is_winning_board(draws, board, i)) then
-                    if (sum(is_winning) == 2 .and. .not. is_winning(j) == 1) then
+                    if (sum(is_winning) == num_boards - 1 .and. .not. is_winning(j) == 1) then
                         x = sum_remaining(draws, board, i) * draws(i)
                         return
                     end if
@@ -210,22 +221,29 @@ program day04
 
     implicit none
 
-    integer, dimension(27) :: draws
-    integer, dimension(15,5) :: boards
+    integer, allocatable, dimension(:) :: draws, test_draws
+    integer, allocatable, dimension(:,:) :: boards, test_boards
 
     integer :: solution_1, solution_2
 
-    call load_data("test_input.txt", draws, boards)
+    call load_data("test_input.txt", test_draws, test_boards)
+    call load_data("input.txt", draws, boards)
 
-    solution_1 = solve_part1(draws, boards)
-    print *, "The solution to part 1 is ", solution_1
-    print *, "The expected solution  is         4512"
-    print *
+    solution_1 = solve_part1(test_draws, test_boards)
     call assert_equal(solution_1, 4512)
 
-    solution_2 = solve_part2(draws, boards)
-    print *, "The solution to part 2 is ", solution_2
-    print *, "The expected solution  is         1924"
+    solution_1 = solve_part1(draws, boards)
+    call assert_equal(solution_1, 44736)
+
+    print *, "The solution to part 1 is ", solution_1
+    print *
+
+    solution_2 = solve_part2(test_draws, test_boards)
     call assert_equal(solution_2, 1924)
+
+    solution_2 = solve_part2(draws, boards)
+    call assert_equal(solution_2, 1827)
+
+    print *, "The solution to part 2 is ", solution_2
 
 end program day04
