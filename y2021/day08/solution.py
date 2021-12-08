@@ -65,13 +65,7 @@ def decode(inputs: List[str], outputs: List[str]) -> int:
     options[4] -= options[1]
     options[6] -= options[1]
 
-    options_list = [list(i) for i in options]
-    for a, b, c in itertools.product(options_list[1], options_list[2], options_list[4]):
-        ii = [v for v in options_list[1] if v != a][0]
-        jj = [v for v in options_list[2] if v != b][0]
-        kk = [v for v in options_list[4] if v != c][0]
-        mapping = [options_list[0][0], a, b, ii, c, jj, kk]
-
+    for mapping in itertools.product(*options):
         found_match = True
         for digit, lines in digits.items():
             chars = set(mapping[n] for n in lines)
