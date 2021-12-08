@@ -26,8 +26,11 @@ def calculate_part1(input_str: str) -> int:
     return result
 
 
-def extract_with_length(inputs: List[str], n: int) -> List[str]:
-    return [i for i in inputs if len(i) == n]
+def extract_with_length(inputs: List[str], n: int) -> str:
+    for i in inputs:
+        if len(i) == n:
+            return i
+    raise ValueError
 
 
 digits = {
@@ -47,23 +50,22 @@ digits = {
 def decode(inputs: List[str], outputs: List[str]) -> int:
     options = [set("abcdefg") for _ in range(7)]
 
-    val = extract_with_length(inputs, 2)[0]
-    options[2] &= set(val)
-    options[5] &= set(val)
+    val = extract_with_length(inputs, 2)
+    for i in {2, 5}:
+        options[i] &= set(val)
     for i in {0, 1, 3, 4, 6}:
         options[i] -= set(val)
 
-    val = extract_with_length(inputs, 3)[0]
-    options[0] &= set(val) - options[2]
+    val = extract_with_length(inputs, 3)
+    options[0] &= set(val)
     for i in {1, 2, 3, 4, 5, 6}:
         options[i] -= options[0]
 
-    val = extract_with_length(inputs, 4)[0]
-    options[1] &= set(val) - options[2]
-    options[3] &= set(val) - options[2]
-
-    options[4] -= options[1]
-    options[6] -= options[1]
+    val = extract_with_length(inputs, 4)
+    for i in {1, 3}:
+        options[i] &= set(val)
+    for i in {4, 6}:
+        options[i] -= options[1]
 
     for mapping in itertools.product(*options):
         found_match = True
@@ -78,10 +80,9 @@ def decode(inputs: List[str], outputs: List[str]) -> int:
                 for digit, lines in digits.items():
                     chars = set(mapping[n] for n in lines)
                     if chars == set(output):
-                        result *= 10
-                        result += digit
+                        result = 10 * result + digit
             return result
-    return -1
+    raise ValueError
 
 
 def calculate_part2(input_str: str) -> int:
