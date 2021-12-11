@@ -39,7 +39,7 @@ def test_part1(input_str: str, expected: int, num_steps: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (TEST_INPUT, 10),
+        (TEST_INPUT, 195),
         # (REAL_INPUT, 50),
     ],
 )

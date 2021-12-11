@@ -42,7 +42,28 @@ def calculate_part1(input_str: str, num_steps: int) -> int:
 
 def calculate_part2(input_str: str) -> int:
     data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    iteration = 0
+    while True:
+        for pos in data:
+            data[pos] += 1
+
+        blinked = set()
+        while any(i > 9 for i in data.values()):
+            for pos in dict(data):
+                if data[pos] > 9 and pos not in blinked:
+                    blinked.add(pos)
+                    data.pop(pos)
+                    for dx, dy in itertools.product([-1, 0, 1], [-1, 0, 1]):
+                        new_pos = (pos[0] + dx, pos[1] + dy)
+                        if new_pos in data:
+                            data[new_pos] += 1
+
+        for pos in blinked:
+            data[pos] = 0
+
+        iteration += 1
+        if all(i == 0 for i in data.values()):
+            return iteration
 
 
 def main() -> None:
