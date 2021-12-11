@@ -40,7 +40,7 @@ def test_part1(input_str: str, expected: int, num_steps: int) -> None:
     "input_str,expected",
     [
         (TEST_INPUT, 195),
-        # (REAL_INPUT, 50),
+        (REAL_INPUT, 364),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
