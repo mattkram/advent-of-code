@@ -1,5 +1,6 @@
 from collections import defaultdict
 from pathlib import Path
+from typing import DefaultDict
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -21,6 +22,7 @@ def calculate_part1(input_str: str) -> int:
     data = parse(input_str)  # noqa: F841
 
     num_routes = 0
+    routes = []
 
     def count_routes(
         source: str = "start", prev_route: Optional[List[str]] = None
@@ -33,18 +35,49 @@ def calculate_part1(input_str: str) -> int:
 
         if source == "end":
             num_routes += 1
+            routes.append(prev_route + [source])
             return
 
         for target in data.get(source, []):
             count_routes(target, prev_route + [source])
 
     count_routes("start")
-    return num_routes
+    return len(routes)
 
 
 def calculate_part2(input_str: str) -> int:
     data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+
+    lowers = {start for start in data if start == start.lower()}
+    num_routes = 0
+
+    def count_routes(
+        source: str = "start", prev_route: Optional[List[str]] = None
+    ) -> None:
+        nonlocal num_routes
+        prev_route = list(prev_route or [])
+
+        route = prev_route + [source]
+        counts: DefaultDict[str, int] = defaultdict(lambda: 0)
+        for cave in route:
+            if cave != "start" and cave != "end" and cave in lowers:
+                counts[cave] += 1
+        if source == "start" and "start" in prev_route:
+            return
+        if sum(count == 2 for count in counts.values()) >= 2:
+            return
+        if any(count > 2 for count in counts.values()):
+            return
+
+        if source == "end":
+            num_routes += 1
+            return
+        for target in data.get(source, []):
+            count_routes(target, route)
+
+    count_routes("start")
+
+    return num_routes
 
 
 def main() -> None:

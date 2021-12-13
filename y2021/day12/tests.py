@@ -71,7 +71,9 @@ def test_part1(input_str: str, expected: int) -> None:
     "input_str,expected",
     [
         (TEST_INPUT_1, 36),
-        # (REAL_INPUT, 50),
+        (TEST_INPUT_2, 103),
+        (TEST_INPUT_3, 3509),
+        (REAL_INPUT, 150004),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
