@@ -1,5 +1,5 @@
 from collections import Counter
-from itertools import zip_longest
+from functools import cache  # type: ignore
 from pathlib import Path
 from typing import Dict
 from typing import List
@@ -21,20 +21,25 @@ def parse(input_str: str) -> Tuple[List[str], Dict[str, str]]:
 def calculate(input_str: str, num_steps: int = 10) -> int:
     template, rules = parse(input_str)  # noqa: F841
 
-    for _ in range(num_steps):
-        new_template = []
+    @cache
+    def get_counts(left: str, right: str, level: int = 0) -> Counter:
+        inner_counter = Counter()  # type: ignore
 
-        for a, b in zip_longest(template, template[1:]):
-            new_template.append(a)
-            if b is None:
-                break
-            try:
-                new_template.append(rules[a + b])
-            except KeyError:
-                pass
+        if level == num_steps:
+            inner_counter[left] += 1
+            return inner_counter
 
-        template = new_template
-    counter = Counter(template)
+        combo = left + right
+        if combo in rules:
+            inner_counter.update(get_counts(left, rules[combo], level=level + 1))
+            inner_counter.update(get_counts(rules[combo], right, level=level + 1))
+
+        return inner_counter
+
+    counter = Counter({template[-1]: 1})
+    for left, right in zip(template, template[1:]):
+        counter.update(get_counts(left, right))
+
     return max(counter.values()) - min(counter.values())
 
 

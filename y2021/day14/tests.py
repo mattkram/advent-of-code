@@ -32,22 +32,13 @@ with INPUTS_FILE.open("r") as fp:
 
 
 @pytest.mark.parametrize(
-    "input_str,expected",
+    "input_str,expected,num_steps",
     [
-        (TEST_INPUT, 1588),
-        (REAL_INPUT, 3118),
+        (TEST_INPUT, 1588, 10),
+        (REAL_INPUT, 3118, 10),
+        (TEST_INPUT, 2188189693529, 40),
+        (REAL_INPUT, 4332887448171, 40),
     ],
 )
-def test_part1(input_str: str, expected: int) -> None:
-    assert calculate(input_str) == expected
-
-
-@pytest.mark.parametrize(
-    "input_str,expected",
-    [
-        (TEST_INPUT, 10),
-        # (REAL_INPUT, 50),
-    ],
-)
-def test_part2(input_str: str, expected: int) -> None:
-    assert calculate(input_str, num_steps=40) == expected
+def test_calculate(input_str: str, expected: int, num_steps: int) -> None:
+    assert calculate(input_str, num_steps=num_steps) == expected
