@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .solution import calculate_part1
-from .solution import calculate_part2
+from .solution import calculate
 
 TEST_INPUT = """
     NNCB
@@ -40,7 +39,7 @@ with INPUTS_FILE.open("r") as fp:
     ],
 )
 def test_part1(input_str: str, expected: int) -> None:
-    assert calculate_part1(input_str) == expected
+    assert calculate(input_str) == expected
 
 
 @pytest.mark.parametrize(
@@ -51,4 +50,4 @@ def test_part1(input_str: str, expected: int) -> None:
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
-    assert calculate_part2(input_str) == expected
+    assert calculate(input_str, num_steps=40) == expected

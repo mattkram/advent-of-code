@@ -18,7 +18,7 @@ def parse(input_str: str) -> Tuple[List[str], Dict[str, str]]:
     return template, rules
 
 
-def calculate_part1(input_str: str, num_steps: int = 10) -> int:
+def calculate(input_str: str, num_steps: int = 10) -> int:
     template, rules = parse(input_str)  # noqa: F841
 
     for _ in range(num_steps):
@@ -38,16 +38,11 @@ def calculate_part1(input_str: str, num_steps: int = 10) -> int:
     return max(counter.values()) - min(counter.values())
 
 
-def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
-
-
 def main() -> None:
     with INPUTS_FILE.open() as fp:
         input_str = fp.read()
-        print(f"The answer to part 1 is {calculate_part1(input_str)}")
-        print(f"The answer to part 2 is {calculate_part2(input_str)}")
+        print(f"The answer to part 1 is {calculate(input_str, num_steps=10)}")
+        print(f"The answer to part 2 is {calculate(input_str, num_steps=40)}")
 
 
 if __name__ == "__main__":
