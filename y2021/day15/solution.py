@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import Dict
+from typing import List
 from typing import Optional
 from typing import Set
 from typing import Tuple
@@ -30,13 +31,29 @@ class Node:
         return self._id
 
 
-def parse(input_str: str) -> Graph:
+def multiply_boards(ints: List[List[int]], multiplier: int) -> List[List[int]]:
+    new_ints = []
+
+    for row_repeat in range(multiplier):
+        for row in ints:
+            new_row = []
+            for col_repeat in range(multiplier):
+                for value in row:
+                    new_value = ((value + col_repeat + row_repeat) - 1) % 9 + 1
+                    new_row.append(new_value)
+            new_ints.append(new_row)
+    return new_ints
+
+
+def parse(input_str: str, multiplier: int = 1) -> Graph:
     lines = [str(s.strip()) for s in input_str.splitlines() if s.strip()]
+    ints = [[int(s) for s in line] for line in lines]
+    ints = multiply_boards(ints, multiplier)
 
     nodes: Graph = {}
-    for i, line in enumerate(lines):
-        for j, char in enumerate(line):
-            node = Node(energy=int(char))
+    for i, line in enumerate(ints):
+        for j, value in enumerate(line):
+            node = Node(energy=value)
             nodes[i, j] = node
 
     for (row, col), node in nodes.items():
@@ -91,14 +108,14 @@ def calculate_part1(input_str: str) -> int:
 
 
 def calculate_part2(input_str: str) -> int:
-    graph = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    graph = parse(input_str, multiplier=5)  # noqa: F841
+    return get_min_energy_path(graph)
 
 
 def main() -> None:
     with INPUTS_FILE.open() as fp:
         input_str = fp.read()
-        print(f"The answer to part 1 is {calculate_part1(input_str)}")
+        # print(f"The answer to part 1 is {calculate_part1(input_str)}")
         print(f"The answer to part 2 is {calculate_part2(input_str)}")
 
 
