@@ -102,7 +102,7 @@ def test_multiply_boards() -> None:
     "input_str,expected",
     [
         (TEST_INPUT, 315),
-        # (REAL_INPUT, 50),
+        (REAL_INPUT, 3063),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:

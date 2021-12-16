@@ -70,36 +70,25 @@ def parse(input_str: str, multiplier: int = 1) -> Graph:
 
 
 def get_min_energy_path(graph: Graph) -> int:
-    max_row, max_col = max(graph.keys())
-    nodes = set(graph.values())
-    while nodes:
-        min_dist = INFINITY
-        min_dist_node, *_ = nodes
-        for node in nodes:
-            if node.dist < min_dist:
-                min_dist_node = node
-                min_dist = node.dist
+    target_node = graph[max(graph.keys())]
+    active_nodes = {graph[0, 0]}
+    while active_nodes:
+        min_dist_node = min(active_nodes, key=lambda node: node.dist)
 
-        nodes.remove(min_dist_node)
-
-        if min_dist_node == graph[max_row, max_col]:
+        if min_dist_node == target_node:
             break
 
+        # Remove this node from the temporary graph, and also from each of the neighbor's
+        # lists of neighbors
+        active_nodes.remove(min_dist_node)
+
         for neighbor in min_dist_node.neighbors:
-            if neighbor not in nodes:
-                continue
+            neighbor.neighbors.remove(min_dist_node)
+            if neighbor.dist == INFINITY:
+                active_nodes.add(neighbor)
+            neighbor.dist = min(neighbor.dist, min_dist_node.dist + neighbor.energy)
 
-            alt = min_dist + neighbor.energy
-            if alt < neighbor.dist:
-                neighbor.dist = alt
-                neighbor.prev = min_dist_node
-
-    node = graph[max_row, max_col]
-    total = 0
-    while node.prev is not None:
-        total += node.energy
-        node = node.prev
-    return total
+    return target_node.dist
 
 
 def calculate_part1(input_str: str) -> int:
@@ -115,7 +104,7 @@ def calculate_part2(input_str: str) -> int:
 def main() -> None:
     with INPUTS_FILE.open() as fp:
         input_str = fp.read()
-        # print(f"The answer to part 1 is {calculate_part1(input_str)}")
+        #        print(f"The answer to part 1 is {calculate_part1(input_str)}")
         print(f"The answer to part 2 is {calculate_part2(input_str)}")
 
 
