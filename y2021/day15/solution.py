@@ -1,4 +1,5 @@
 from pathlib import Path
+from queue import PriorityQueue
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -29,6 +30,9 @@ class Node:
 
     def __hash__(self) -> int:
         return self._id
+
+    def __gt__(self, other: "Node") -> bool:
+        return self.dist > other.dist
 
 
 def multiply_boards(ints: List[List[int]], multiplier: int) -> List[List[int]]:
@@ -71,21 +75,20 @@ def parse(input_str: str, multiplier: int = 1) -> Graph:
 
 def get_min_energy_path(graph: Graph) -> int:
     target_node = graph[max(graph.keys())]
-    active_nodes = {graph[0, 0]}
-    while active_nodes:
-        min_dist_node = min(active_nodes, key=lambda node: node.dist)
+
+    queue: PriorityQueue = PriorityQueue()
+    queue.put(graph[0, 0])
+
+    while queue.not_empty:
+        min_dist_node = queue.get()
 
         if min_dist_node == target_node:
             break
 
-        # Remove this node from the temporary graph, and also from each of the neighbor's
-        # lists of neighbors
-        active_nodes.remove(min_dist_node)
-
         for neighbor in min_dist_node.neighbors:
             neighbor.neighbors.remove(min_dist_node)
             if neighbor.dist == INFINITY:
-                active_nodes.add(neighbor)
+                queue.put(neighbor)
             neighbor.dist = min(neighbor.dist, min_dist_node.dist + neighbor.energy)
 
     return target_node.dist
