@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_cases(t *testing.T) {
-	result := Calculate("(())")
-	assert.Equal(t, 1, result)
+func Test_CalculatePart1(t *testing.T) {
+	result := CalculatePart1("(())")
+	assert.Equal(t, 0, result)
 }
