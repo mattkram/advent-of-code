@@ -168,8 +168,7 @@ def find_overlap(base: ScannerReport, report: ScannerReport) -> Optional[Scanner
     return None
 
 
-def calculate_part1(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
+def find_known_positions(data: Dict[int, ScannerReport]) -> Dict[int, ScannerReport]:
     # Mapping of relative location to scan 0 and the report that matches
     known_positions: Dict[int, ScannerReport] = {0: data.pop(0)}
     known_positions[0].position = Coordinate(0, 0, 0)
@@ -195,6 +194,12 @@ def calculate_part1(input_str: str) -> int:
             else:
                 no_overlap.append((first.scanner_number, second.scanner_number))
         print(f"iteration {it}")
+    return known_positions
+
+
+def calculate_part1(input_str: str) -> int:
+    data = parse(input_str)  # noqa: F841
+    known_positions = find_known_positions(data)
 
     beacons = set()
     for scanner_report in known_positions.values():
@@ -206,13 +211,22 @@ def calculate_part1(input_str: str) -> int:
 
 def calculate_part2(input_str: str) -> int:
     data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    known_positions = find_known_positions(data)
+
+    max_distance = 0
+    for first, second in itertools.combinations(known_positions.values(), 2):
+        assert second.position is not None
+        assert first.position is not None
+        offset = second.position - first.position
+        distance = sum(abs(d) for d in offset)
+        max_distance = max(max_distance, distance)
+    return max_distance
 
 
 def main() -> None:
     with INPUTS_FILE.open() as fp:
         input_str = fp.read()
-        print(f"The answer to part 1 is {calculate_part1(input_str)}")
+        # print(f"The answer to part 1 is {calculate_part1(input_str)}")
         print(f"The answer to part 2 is {calculate_part2(input_str)}")
 
 
