@@ -13,11 +13,30 @@ func CalculatePart1(s string) int {
 			sum += 1
 		} else if c == ')' {
 			sum -= 1
+		} else if c == '\n' {
 		} else {
 			panic("Invalid character!")
 		}
 	}
 	return sum
+
+}
+
+func CalculatePart2(s string) int {
+	floor := 0
+	for i, c := range s {
+		if c == '(' {
+			floor += 1
+		} else if c == ')' {
+			floor -= 1
+		} else {
+			panic("Invalid character!")
+		}
+		if floor == -1 {
+			return i + 1
+		}
+	}
+	panic("Couldn't find floor")
 
 }
 
@@ -33,5 +52,6 @@ func main() {
 		panic("Blank string")
 	}
 
-	fmt.Printf("Solution to part 1: %d", CalculatePart1(inputString))
+	fmt.Printf("Solution to part 1: %d\n", CalculatePart1(inputString))
+	fmt.Printf("Solution to part 2: %d\n", CalculatePart2(inputString))
 }
