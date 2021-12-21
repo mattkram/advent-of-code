@@ -30,8 +30,8 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (TEST_INPUT, 10),
-        # (REAL_INPUT, 50),
+        (TEST_INPUT, 444356092776315),
+        (REAL_INPUT, 190897246590017),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
