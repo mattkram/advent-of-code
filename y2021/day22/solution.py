@@ -93,25 +93,10 @@ def calculate_part2(input_str: str) -> int:
                 ]
                 if not filtered_z:
                     continue
-                for (
-                    turn_on,
-                    x_min_i,
-                    x_max_i,
-                    y_min_i,
-                    y_max_i,
-                    z_min_i,
-                    z_max_i,
-                ) in filtered_z[::-1]:
-                    if (
-                        (x_min_i <= int(x_min + 0.5) <= x_max_i)
-                        and (y_min_i <= int(y_min + 0.5) <= y_max_i)
-                        and (z_min_i <= int(z_min + 0.5) <= z_max_i)
-                    ):
-                        if turn_on:
-                            s += int(
-                                (x_max - x_min) * (y_max - y_min) * (z_max - z_min)
-                            )
-                        break
+
+                turn_on, *_ = filtered_z[-1]
+                if turn_on:
+                    s += int((x_max - x_min) * (y_max - y_min) * (z_max - z_min))
 
     return s
 
