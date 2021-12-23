@@ -51,8 +51,69 @@ def calculate_part1(input_str: str) -> int:
 
 
 def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    instructions = parse(input_str)  # noqa: F841
+
+    x_lim_set = set()
+    y_lim_set = set()
+    z_lim_set = set()
+    for turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i in instructions:
+        x_lim_set.add(x_min_i - 0.5)
+        x_lim_set.add(x_max_i + 0.5)
+        y_lim_set.add(y_min_i - 0.5)
+        y_lim_set.add(y_max_i + 0.5)
+        z_lim_set.add(z_min_i - 0.5)
+        z_lim_set.add(z_max_i + 0.5)
+
+    x_lims = sorted(x_lim_set)
+    y_lims = sorted(y_lim_set)
+    z_lims = sorted(z_lim_set)
+
+    s = 0
+    for x_min, x_max in zip(x_lims, x_lims[1:]):
+        filtered_x = [
+            (turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i)
+            for turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i in instructions
+            if x_min_i <= int(x_min + 0.5) <= x_max_i
+        ]
+        if not filtered_x:
+            continue
+        for y_min, y_max in zip(y_lims, y_lims[1:]):
+            filtered_y = [
+                (turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i)
+                for turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i in filtered_x
+                if y_min_i <= int(y_min + 0.5) <= y_max_i
+            ]
+            if not filtered_y:
+                continue
+            for z_min, z_max in zip(z_lims, z_lims[1:]):
+                filtered_z = [
+                    (turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i)
+                    for turn_on, x_min_i, x_max_i, y_min_i, y_max_i, z_min_i, z_max_i in filtered_y
+                    if z_min_i <= int(z_min + 0.5) <= z_max_i
+                ]
+                if not filtered_z:
+                    continue
+                for (
+                    turn_on,
+                    x_min_i,
+                    x_max_i,
+                    y_min_i,
+                    y_max_i,
+                    z_min_i,
+                    z_max_i,
+                ) in filtered_z[::-1]:
+                    if (
+                        (x_min_i <= int(x_min + 0.5) <= x_max_i)
+                        and (y_min_i <= int(y_min + 0.5) <= y_max_i)
+                        and (z_min_i <= int(z_min + 0.5) <= z_max_i)
+                    ):
+                        if turn_on:
+                            s += int(
+                                (x_max - x_min) * (y_max - y_min) * (z_max - z_min)
+                            )
+                        break
+
+    return s
 
 
 def main() -> None:
