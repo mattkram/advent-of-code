@@ -81,6 +81,26 @@ def format_leader_message(members: Dict[int, Set[MemberScore]]) -> str:
     day = get_contest_day()
     if day < 1:
         lines.append("The contest hasn't started yet.")
+    elif day > 25:
+        lines.append(
+            " ".join(
+                [
+                    ":christmas_tree:",
+                    ":star:",
+                    ":santa::skin-tone-3:",
+                    "Advent of Code Day 25+",
+                    ":mother_christmas::skin-tone-3:",
+                    ":star:",
+                    ":christmas_tree:",
+                ]
+            )
+        )
+        lines.append(
+            "\nAlthough we have reached Day 25, the leaderboard will "
+            "continue to be posted until New Year's Day. This should give "
+            "everyone a fair amount of time, so as not to discourage "
+            "avoidance of family during this Holiday.\n"
+        )
     else:
         lines.append(
             " ".join(

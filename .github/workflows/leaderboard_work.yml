@@ -3,7 +3,9 @@ name: Publish Advent of Code Statistics to Work Slack
 on:
   schedule:
     # 9am Central time, December 1-25
-    - cron:  '0 15 1-25 12 *'
+    - cron:  '0 15 * 12 *'
+    # 9am Central time, January 1
+    - cron:  '0 15 1 1 *'
   workflow_dispatch:
 
 jobs:
