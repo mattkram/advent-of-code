@@ -52,7 +52,7 @@ def parse(input_str: str) -> Board:
 
 def print_board(board: Board) -> None:
     print(f"Total Energy: {get_total_energy(board)}")
-    for row in range(-1, 4):
+    for row in range(-1, 6):
         for col in range(-1, 12):
             try:
                 spot = board[row, col]
@@ -79,13 +79,23 @@ def get_next_steps(board: Board) -> List[Board]:
                 continue
 
             target_col = SLOT_MAP[pod.char]
-            bottom = board[2, target_col]
-            if bottom is None:
-                target_row = 2
-            elif board[1, target_col] is None and bottom.char == pod.char:
-                target_row = 1
-            else:
-                continue  # To next hallway spot
+            target_row = None
+            for target_row in range(4, 0, -1):
+                try:
+                    room_pod = board[target_row, target_col]
+                except KeyError:
+                    continue
+
+                if room_pod is None:
+                    break  # target_row is correct
+                if room_pod.char == pod.char:
+                    continue  # to next highest spot
+                else:
+                    target_row = None
+                    break
+
+            if target_row is None:
+                continue
 
             if (
                 energy := get_energy_to_move(
@@ -103,16 +113,20 @@ def get_next_steps(board: Board) -> List[Board]:
 
     movable_room_pawns = []
     for target, col in SLOT_MAP.items():
-        top = board[1, col]  # Top spot or None
-        bottom = board[2, col]  # Bottom spot or None
+        # Find the highest open slot, ensuring all below have correct char
+        col_pods = []
+        for row in range(4, 0, -1):
+            try:
+                room_pod = board[row, col]
+            except KeyError:
+                continue
+            else:
+                if room_pod is not None:
+                    col_pods.append((row, col, room_pod))
 
-        if top is not None:
-            assert bottom is not None
-            if bottom.char != target or top.char != target:
-                movable_room_pawns.append((1, col))
-        else:
-            if bottom is not None and bottom.char != target:
-                movable_room_pawns.append((2, col))
+        if any(p.char != target for _, _, p in col_pods):
+            r, c, p = col_pods[-1]
+            movable_room_pawns.append((r, c))
 
     open_hallway_targets = [
         (row, col)
@@ -155,8 +169,12 @@ def get_energy_to_move(board: Board, source: Coords, target: Coords) -> Optional
 
 def is_winning(board: Board) -> bool:
     for target, col in SLOT_MAP.items():
-        for row in [1, 2]:
-            pod = board[row, col]
+        for row in range(1, 5):
+            try:
+                pod = board[row, col]
+            except KeyError:
+                continue
+
             if pod is None or pod.char != target:
                 return False
     return True
@@ -167,7 +185,7 @@ def get_total_energy(board: Board) -> int:
 
 
 def find_min_energy(input_board: Board) -> int:
-    min_energy = float(20_000)
+    min_energy = float(100_000)
 
     def _find_min_energy(board: Board, total_energy: int = 0) -> None:
         nonlocal min_energy
@@ -200,6 +218,10 @@ def calculate_part1(input_str: str) -> int:
 
 def calculate_part2(input_str: str) -> int:
     board = parse(input_str)  # noqa: F841
+    for col, chars in zip([2, 4, 6, 8], ["DD", "CB", "BA", "AC"]):
+        board[4, col] = board[2, col]
+        board[2, col] = Pod(char=chars[0])
+        board[3, col] = Pod(char=chars[1])
     return find_min_energy(board)
 
 

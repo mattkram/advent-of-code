@@ -13,16 +13,6 @@ TEST_INPUT = """
   #######
 """
 
-TEST_INPUT_PART_2 = """
-#############
-#...........#
-###B#C#B#D###
-  #D#C#B#A#
-  #D#B#A#C#
-  #A#D#C#A#
-  #########
-"""
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 with INPUTS_FILE.open("r") as fp:
@@ -43,8 +33,8 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (TEST_INPUT_PART_2, 44169),
-        # (REAL_INPUT, 50),
+        (TEST_INPUT, 44169),
+        # (REAL_INPUT, 55136),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
