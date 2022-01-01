@@ -25,10 +25,11 @@ SESSION_ID = os.environ["SESSION_ID"]
 SLACK_WEBHOOK = os.environ["SLACK_WEBHOOK"]
 
 # You should not need to change this URL
+CONTEST_YEAR = (datetime.datetime.today() - datetime.timedelta(days=30)).year
 LEADERBOARD_URL = "/".join(
     [
         "https://adventofcode.com",
-        str(datetime.datetime.today().year),
+        str(CONTEST_YEAR),
         "leaderboard",
         "private",
         "view",
