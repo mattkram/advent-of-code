@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func Test_Calculate(t *testing.T) {
+func Test_IsNice1(t *testing.T) {
 	cases := []struct {
 		Input    string
 		Expected bool
@@ -18,7 +18,25 @@ func Test_Calculate(t *testing.T) {
 	}
 
 	for _, data := range cases {
-		result := IsNice(data.Input)
+		result := IsNice1(data.Input)
+		assert.Equal(t, data.Expected, result)
+	}
+}
+
+func Test_IsNice2(t *testing.T) {
+	cases := []struct {
+		Input    string
+		Expected bool
+	}{
+		{"qjhvhtzxzqqjkmpb", true},
+		{"xxyxx", true},
+		{"uurcxstgmygtbstg", false},
+		{"ieodomkazucvgmuy", false},
+		{"aaaxyxy", true},
+	}
+
+	for _, data := range cases {
+		result := IsNice2(data.Input)
 		assert.Equal(t, data.Expected, result)
 	}
 }

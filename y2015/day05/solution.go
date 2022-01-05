@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-// IsNice returns true if the input string is nice, false otherwise.
+// IsNice1 returns true if the input string is nice, false otherwise.
 // We first check for disallowed pairs of letters. Then we iterate
 // through the characters, counting vowels and ensuring at least one
 // duplicate letter.
-func IsNice(input string) bool {
+func IsNice1(input string) bool {
 
 	disallowed := []string{
 		"ab", "cd", "pq", "xy",
@@ -40,11 +40,45 @@ func IsNice(input string) bool {
 	return numVowels >= 3 && hasDuplicateLetter
 }
 
-// CalculatePart1 simply iterates through each line and sums the number of nice strings.
-func CalculatePart1(lines []string) int {
+// IsNice2 returns true if the input string is nice, false otherwise.
+// We first check for pairs of letters. We store each pair, and then if we
+// see it again two characters or more later, we have the necessary repeat.
+// Then we check for at least one case where a letter is sandwiched between
+// two others, which are identical.
+func IsNice2(input string) bool {
+	runes := []rune(input)
+	pairs := make(map[string]int)
+
+	hasRepeat := false
+	for i := range runes[:len(runes)-1] {
+		key := string(runes[i]) + string(runes[i+1])
+		idx, ok := pairs[key]
+		if !ok {
+			// On first occurrence of pair, add to the map
+			pairs[key] = i
+		} else if i >= idx+2 {
+			// Check for overlap
+			hasRepeat = true
+			break
+		}
+	}
+
+	hasSandwichedLetter := false
+	for i := range runes[:len(runes)-2] {
+		if runes[i] == runes[i+2] {
+			hasSandwichedLetter = true
+			break
+		}
+	}
+
+	return hasRepeat && hasSandwichedLetter
+}
+
+// Calculate simply iterates through each line and sums the number of nice strings.
+func Calculate(lines []string, niceFunc func(string) bool) int {
 	s := 0
 	for _, line := range lines {
-		if IsNice(line) {
+		if niceFunc(line) {
 			s += 1
 		}
 	}
@@ -74,6 +108,6 @@ func main() {
 	filename, _ := filepath.Abs("y2015/day05/input.txt")
 	lines := ReadLines(filename)
 
-	fmt.Printf("Solution to part 1: %d\n", CalculatePart1(lines))
-	//fmt.Printf("Solution to part 2: %d\n", Calculate(lines[0], 6))
+	fmt.Printf("Solution to part 1: %d\n", Calculate(lines, IsNice1))
+	fmt.Printf("Solution to part 2: %d\n", Calculate(lines, IsNice2))
 }
