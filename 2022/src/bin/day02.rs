@@ -2,33 +2,34 @@
 use std::{
     fs::File,
     io::{prelude::*, BufReader},
-    path::Path,
 };
 
-fn counts_from_file(filename: impl AsRef<Path>) -> Vec<i32> {
-    let file = File::open(filename).expect("no such file");
+/// Read the contents of a file into a list of strings.
+/// Whitespace is trimmed from beginning and end of the string.
+/// Empty lines are an empty string.
+fn read_file_to_strings(filename: &str) -> Vec<String> {
+    let file = File::open(filename).expect(&format!("{} does not exist", filename));
     let buf = BufReader::new(file);
-    let mut result: Vec<i32> = Vec::new();
+    let mut result: Vec<String> = Vec::new();
 
-    let mut total = 0;
     for line in buf.lines() {
-
-        let s: Vec<String> = line.unwrap().split(" ");
-
+        if let Ok(s) = line {
+            result.push(String::from(s.trim()));
+        }
     }
     result
 }
 
 fn solve_part1() -> i32 {
-    let counts = counts_from_file("data/day01.txt");
-    let max_value =  counts.iter().max().unwrap().clone();
-    max_value
+    let lines = read_file_to_strings("data/day02.txt");
+    for line in lines {
+        println!("\"{}\"", line);
+    }
+    0
 }
 
 fn solve_part2() -> i32 {
-    let mut counts = counts_from_file("data/day01.txt");
-    counts.sort_by(|a, b| b.cmp(a));
-    counts[..3].iter().sum()
+    0
 }
 
 fn main() {
