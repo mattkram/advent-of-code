@@ -23,25 +23,31 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
 }
 
 
-/// Convert the input list to a list of rounds
-fn lines_to_priorities(lines: Vec<String>) -> Vec<i32> {
-    let mut result: Vec<i32> = Vec::with_capacity(lines.len());
+/// Convert the input list to a list of common characters between first and second halves.
+fn lines_to_common_char(lines: Vec<String>) -> Vec<char> {
+    let mut result: Vec<char> = Vec::with_capacity(lines.len());
     for line in lines {
         let first_half = &line[..line.len() / 2];
-
         let second_half = &line[line.len() / 2..];
-        println!("{} | {}", first_half, second_half);
+        // println!("{} | {}", first_half, second_half);
 
         let first_set: HashSet<char> = first_half.chars().collect();
         let second_set: HashSet<char> = second_half.chars().collect();
 
-        let mut intersection = first_set.intersection(&second_set);
-        let i = intersection.next().unwrap();
+        let intersection = first_set.intersection(&second_set).next().unwrap();
+        result.push(*intersection);
+    }
+    result
+}
 
-        let actual: u32 = (*i).into();
+/// Convert a vector of characters into a vector of priorities.
+fn chars_to_priorities(chars: Vec<char>) -> Vec<i32> {
+    let A: u32 = 'A'.into();
+    let a: u32 = 'a'.into();
 
-        let A: u32 = 'A'.into();
-        let a: u32 = 'a'.into();
+    let mut result: Vec<i32> = Vec::with_capacity(chars.len());
+    for i in chars {
+        let actual: u32 = i as u32;
 
         let priority = if actual > a {
             (actual as i32) - (a as i32) + 1
@@ -56,7 +62,8 @@ fn lines_to_priorities(lines: Vec<String>) -> Vec<i32> {
 
 fn solve_part1() -> i32 {
     let lines = read_file_to_strings("data/day03.txt");
-    let priorities = lines_to_priorities(lines);
+    let common_chars = lines_to_common_char(lines);
+    let priorities = chars_to_priorities(common_chars);
 
     priorities.iter().sum()
 }
