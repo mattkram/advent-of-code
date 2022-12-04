@@ -72,7 +72,10 @@ def get_leaderboard(data: Dict[str, Any]) -> Dict[int, Set[MemberScore]]:
 def get_contest_day() -> int:
     today = datetime.datetime.today()
     delta = today - datetime.datetime(today.year, 12, 1)
-    return delta.days + 1
+    # This is now one less than it used to be because I changed the post time to be 0400 UTC
+    # TODO: I think there is a more robust way to do this to calculate correctly for any time
+    #       before posting time
+    return delta.days
 
 
 def format_leader_message(members: Dict[int, Set[MemberScore]]) -> str:
