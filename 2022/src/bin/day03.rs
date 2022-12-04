@@ -5,6 +5,7 @@ use std::{
     collections::HashSet,
 };
 use std::collections::HashMap;
+use std::hash::Hash;
 
 /// Read the contents of a file into a list of strings.
 /// Whitespace is trimmed from beginning and end of the string.
@@ -40,6 +41,27 @@ fn lines_to_common_char(lines: Vec<String>) -> Vec<char> {
     result
 }
 
+/// Convert the input list to a list of common characters between first and second halves.
+fn lines_to_elve_badges(lines: Vec<String>) -> Vec<char> {
+    let num_groups = lines.len() / 3;
+    let mut result: Vec<char> = Vec::with_capacity(num_groups);
+    for i in 0..num_groups {
+        let elf_0: HashSet<char> = (&lines[3*i + 0]).chars().collect();
+        let elf_1: HashSet<char> = (&lines[3*i + 1]).chars().collect();
+        let elf_2: HashSet<char> = (&lines[3*i + 2]).chars().collect();
+
+        let intersection_0 = elf_0.intersection(&elf_1);
+        let intersection_1 = elf_1.intersection(&elf_2);
+
+        let s0: HashSet<char> = intersection_0.map(|s| *s).collect();
+        let s1: HashSet<char> = intersection_1.map(|s| *s).collect();
+
+        let intersection = s0.intersection(&s1).next().unwrap();
+        result.push(*intersection);
+    }
+    result
+}
+
 /// Convert a vector of characters into a vector of priorities.
 fn chars_to_priorities(chars: Vec<char>) -> Vec<i32> {
     let A: u32 = 'A'.into();
@@ -69,7 +91,11 @@ fn solve_part1() -> i32 {
 }
 
 fn solve_part2() -> i32 {
-    0
+    let lines = read_file_to_strings("data/day03.txt");
+    let common_chars = lines_to_elve_badges(lines);
+    let priorities = chars_to_priorities(common_chars);
+
+    priorities.iter().sum()
 }
 
 fn main() {
