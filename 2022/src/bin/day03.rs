@@ -57,17 +57,17 @@ fn lines_to_badges(lines: Vec<String>) -> Vec<char> {
 
 /// Convert a vector of characters into a vector of priorities.
 fn chars_to_priorities(chars: Vec<char>) -> Vec<i32> {
-    let A: u32 = 'A'.into();
-    let a: u32 = 'a'.into();
+    let uppercase_a_ord: u32 = 'A'.into();
+    let lowercase_a_ord: u32 = 'a'.into();
 
     let mut result: Vec<i32> = Vec::with_capacity(chars.len());
     for i in chars {
         let actual: u32 = i as u32;
 
-        let priority = if actual > a {
-            (actual as i32) - (a as i32) + 1
+        let priority = if actual > lowercase_a_ord {
+            (actual as i32) - (lowercase_a_ord as i32) + 1
         } else {
-            (actual as i32) - (A as i32) + 27
+            (actual as i32) - (uppercase_a_ord as i32) + 27
         };
         // println!("{:?} -> {}", i, priority);
         result.push(priority);
