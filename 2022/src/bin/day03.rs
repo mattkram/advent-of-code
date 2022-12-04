@@ -4,8 +4,6 @@ use std::{
     io::{prelude::*, BufReader},
     collections::HashSet,
 };
-use std::collections::HashMap;
-use std::hash::Hash;
 
 /// Read the contents of a file into a list of strings.
 /// Whitespace is trimmed from beginning and end of the string.
@@ -41,8 +39,8 @@ fn lines_to_common_char(lines: Vec<String>) -> Vec<char> {
     result
 }
 
-/// Convert the input list to a list of common characters between first and second halves.
-fn lines_to_elve_badges(lines: Vec<String>) -> Vec<char> {
+/// Convert the input list to a list of common characters between each three-line group.
+fn lines_to_badges(lines: Vec<String>) -> Vec<char> {
     let num_groups = lines.len() / 3;
     let mut result: Vec<char> = Vec::with_capacity(num_groups);
     for i in 0..num_groups {
@@ -50,13 +48,8 @@ fn lines_to_elve_badges(lines: Vec<String>) -> Vec<char> {
         let elf_1: HashSet<char> = (&lines[3*i + 1]).chars().collect();
         let elf_2: HashSet<char> = (&lines[3*i + 2]).chars().collect();
 
-        let intersection_0 = elf_0.intersection(&elf_1);
-        let intersection_1 = elf_1.intersection(&elf_2);
-
-        let s0: HashSet<char> = intersection_0.map(|s| *s).collect();
-        let s1: HashSet<char> = intersection_1.map(|s| *s).collect();
-
-        let intersection = s0.intersection(&s1).next().unwrap();
+        let elves_0_1: HashSet<char> = elf_0.intersection(&elf_1).map(|s| *s).collect();
+        let intersection = elves_0_1.intersection(&elf_2).next().unwrap();
         result.push(*intersection);
     }
     result
@@ -76,7 +69,7 @@ fn chars_to_priorities(chars: Vec<char>) -> Vec<i32> {
         } else {
             (actual as i32) - (A as i32) + 27
         };
-        println!("{:?} -> {}", i, priority);
+        // println!("{:?} -> {}", i, priority);
         result.push(priority);
     }
     result
@@ -92,7 +85,7 @@ fn solve_part1() -> i32 {
 
 fn solve_part2() -> i32 {
     let lines = read_file_to_strings("data/day03.txt");
-    let common_chars = lines_to_elve_badges(lines);
+    let common_chars = lines_to_badges(lines);
     let priorities = chars_to_priorities(common_chars);
 
     priorities.iter().sum()
