@@ -21,7 +21,7 @@ fn read_file_to_strings(filename: &str) -> Vec<String> {
 }
 
 
-#[derive(Eq, PartialEq)]
+#[derive(Eq, PartialEq, Clone)]
 enum Move {
     ROCK,
     PAPER,
@@ -34,8 +34,12 @@ struct Round {
     them: Move,
 }
 
+enum Part {
+    ONE, TWO,
+}
+
 /// Convert the input list to a list of rounds
-fn lines_to_rounds(lines: Vec<String>) -> Vec<Round> {
+fn lines_to_rounds(lines: Vec<String>, part: Part) -> Vec<Round> {
     let mut result: Vec<Round> = Vec::with_capacity(lines.len());
     for line in lines {
         let mut split = line.split(" ");
@@ -46,11 +50,31 @@ fn lines_to_rounds(lines: Vec<String>) -> Vec<Round> {
             _ => panic!("Unknown move")
         };
 
-        let your_move = match split.next().unwrap() {
-            "X" => Move::ROCK,
-            "Y" => Move::PAPER,
-            "Z" => Move::SCISSORS,
-            _ => panic!("Unknown move"),
+        let your_move = match part {
+            Part::ONE => match split.next().unwrap() {
+                "X" => Move::ROCK,
+                "Y" => Move::PAPER,
+                "Z" => Move::SCISSORS,
+                _ => panic!("Unknown move"),
+            }
+            Part::TWO => match split.next().unwrap() {
+                "X" => { // you need to lose
+                    match their_move {
+                        Move::ROCK => Move::SCISSORS,
+                        Move::PAPER => Move::ROCK,
+                        Move::SCISSORS => Move::PAPER,
+                    }
+                },
+                "Y" => // draw
+                    their_move.clone(),
+                "Z" => // you need to win
+                    match their_move {
+                        Move::ROCK => Move::PAPER,
+                        Move::PAPER => Move::SCISSORS,
+                        Move::SCISSORS => Move::ROCK,
+                    },
+                _ => panic!("Unknown move")
+            }
         };
 
         let game = Round {them:their_move, you: your_move};
@@ -88,14 +112,18 @@ fn rounds_to_scores(rounds: Vec<Round>) -> Vec<i32> {
 
 fn solve_part1() -> i32 {
     let lines = read_file_to_strings("data/day02.txt");
-    let rounds = lines_to_rounds(lines);
+    let rounds = lines_to_rounds(lines, Part::ONE);
     let scores = rounds_to_scores(rounds);
 
     scores.iter().sum()
 }
 
 fn solve_part2() -> i32 {
-    0
+    let lines = read_file_to_strings("data/day02.txt");
+    let rounds = lines_to_rounds(lines, Part::TWO);
+    let scores = rounds_to_scores(rounds);
+
+    scores.iter().sum()
 }
 
 fn main() {
