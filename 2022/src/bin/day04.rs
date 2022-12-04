@@ -1,25 +1,5 @@
-
-use std::{
-    fs::File,
-    io::{prelude::*, BufReader},
-    collections::HashSet,
-};
-
-/// Read the contents of a file into a list of strings.
-/// Whitespace is trimmed from beginning and end of the string.
-/// Empty lines are an empty string.
-fn read_file_to_strings(filename: &str) -> Vec<String> {
-    let file = File::open(filename).expect(&format!("{} does not exist", filename));
-    let buf = BufReader::new(file);
-    let mut result: Vec<String> = Vec::new();
-
-    for line in buf.lines() {
-        if let Ok(s) = line {
-            result.push(String::from(s.trim()));
-        }
-    }
-    result
-}
+use std::collections::HashSet;
+use aoc2022;
 
 /// Convert a string of format 1-50 into a set of integers, inclusive.
 fn range_string_to_set(s: &str) -> HashSet<i32> {
@@ -65,12 +45,12 @@ fn count_intersecting_ranges(lines: Vec<String>) -> i32 {
 }
 
 fn solve_part1() -> i32 {
-    let lines = read_file_to_strings("data/day04.txt");
+    let lines = aoc2022::read_file_to_strings("data/day04.txt");
     count_overlapping_ranges(lines)
 }
 
 fn solve_part2() -> i32 {
-    let lines = read_file_to_strings("data/day04.txt");
+    let lines = aoc2022::read_file_to_strings("data/day04.txt");
     count_intersecting_ranges(lines)
 }
 

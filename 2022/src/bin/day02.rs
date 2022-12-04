@@ -1,25 +1,4 @@
-
-use std::{
-    fs::File,
-    io::{prelude::*, BufReader},
-};
-
-/// Read the contents of a file into a list of strings.
-/// Whitespace is trimmed from beginning and end of the string.
-/// Empty lines are an empty string.
-fn read_file_to_strings(filename: &str) -> Vec<String> {
-    let file = File::open(filename).expect(&format!("{} does not exist", filename));
-    let buf = BufReader::new(file);
-    let mut result: Vec<String> = Vec::new();
-
-    for line in buf.lines() {
-        if let Ok(s) = line {
-            result.push(String::from(s.trim()));
-        }
-    }
-    result
-}
-
+use aoc2022;
 
 #[derive(Eq, PartialEq, Clone)]
 enum Move {
@@ -111,7 +90,7 @@ fn rounds_to_scores(rounds: Vec<Round>) -> Vec<i32> {
 }
 
 fn solve_part1() -> i32 {
-    let lines = read_file_to_strings("data/day02.txt");
+    let lines = aoc2022::read_file_to_strings("data/day02.txt");
     let rounds = lines_to_rounds(lines, Part::ONE);
     let scores = rounds_to_scores(rounds);
 
@@ -119,7 +98,7 @@ fn solve_part1() -> i32 {
 }
 
 fn solve_part2() -> i32 {
-    let lines = read_file_to_strings("data/day02.txt");
+    let lines = aoc2022::read_file_to_strings("data/day02.txt");
     let rounds = lines_to_rounds(lines, Part::TWO);
     let scores = rounds_to_scores(rounds);
 

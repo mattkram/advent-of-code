@@ -7,6 +7,10 @@ edition = "2021"
 
 [dependencies]
 
+[lib]
+name = "aoc2022"
+path = "src/lib.rs"
+
 [[bin]]
 name = "day01"
 path = "src/bin/day01.rs"
