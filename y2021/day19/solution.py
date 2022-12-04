@@ -144,7 +144,7 @@ def parse(input_str: str) -> Dict[int, ScannerReport]:
 
         if m := re.match(r"--- scanner (\d+) ---", line):
             scanner_number = int(m.group(1))
-        elif m := re.match(fr"({NUM}),({NUM}),({NUM})", line):
+        elif m := re.match(rf"({NUM}),({NUM}),({NUM})", line):
             scanner_report = scanner_reports[scanner_number]
             scanner_report.scanner_number = scanner_number
             scanner_report.add_reading(Coordinate(*(int(s) for s in m.groups())))

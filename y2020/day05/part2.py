@@ -5,7 +5,7 @@ INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
 def get_val(string: str, keys: str) -> int:
-    return sum(keys.index(v) * 2 ** n for n, v in enumerate(reversed(string)))
+    return sum(keys.index(v) * 2**n for n, v in enumerate(reversed(string)))
 
 
 def calculate(input_str: str) -> int:

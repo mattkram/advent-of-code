@@ -22,7 +22,7 @@ def parse(input_str: str) -> ParsedInput:
 
     class_dict: ClassDict = {}
     for c in classes.splitlines():
-        if (m := CLASS_PATTERN.match(c.strip())) :
+        if m := CLASS_PATTERN.match(c.strip()):
             key, *ind_str = m.groups()
             ind = [int(i) for i in ind_str]
             class_dict[key] = set(range(ind[0], ind[1] + 1)) | set(

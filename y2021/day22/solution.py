@@ -14,7 +14,7 @@ def parse(input_str: str) -> List[Instruction]:
     instructions: List[Instruction] = []
     for line in input_str.strip().splitlines():
         if m := re.match(
-            fr"(\w+) x={NUM}..{NUM},y={NUM}..{NUM},z={NUM}..{NUM}", line.strip()
+            rf"(\w+) x={NUM}..{NUM},y={NUM}..{NUM},z={NUM}..{NUM}", line.strip()
         ):
             on_off, *values = m.groups()
             x_min, x_max, y_min, y_max, z_min, z_max = (int(v) for v in values)
