@@ -41,13 +41,24 @@ fn get_stacks() -> HashMap<i32, RefCell<Vec<char>>> {
     map
 }
 
-fn perform_moves(stacks: HashMap<i32, RefCell<Vec<char>>>, moves: Vec<Move>) -> HashMap<i32, RefCell<Vec<char>>>{
+fn perform_moves(stacks: HashMap<i32, RefCell<Vec<char>>>, moves: Vec<Move>, many: bool) -> HashMap<i32, RefCell<Vec<char>>>{
     for m in moves {
         println!("move {} from {} to {}", m.count, m.from, m.to);
         let mut from_stack = stacks.get(&m.from).unwrap().borrow_mut();
         let mut to_stack = stacks.get(&m.to).unwrap().borrow_mut();
-        for _ in 0..m.count {
-            to_stack.push(from_stack.pop().unwrap());
+        if !many {
+            for _ in 0..m.count {
+                to_stack.push(from_stack.pop().unwrap());
+            }
+        } else {
+            // Part 2
+            let mut tmp_stack: Vec<char> = Vec::new();
+            for _ in 0..m.count {
+                tmp_stack.push(from_stack.pop().unwrap());
+            }
+            for val in tmp_stack.iter().rev() {
+                to_stack.push(*val);
+            }
         }
     }
     stacks
@@ -57,7 +68,7 @@ fn solve_part1() -> String {
     let lines = aoc2022::read_file_to_strings("data/day05.txt");
     let moves = lines_to_moves(lines);
     let mut stacks = get_stacks();
-    let stacks = perform_moves(stacks, moves);
+    let stacks = perform_moves(stacks, moves, false);
 
     for (k, val) in &stacks {
         println!("{}: {}", k, val.borrow().last().unwrap());
@@ -67,6 +78,15 @@ fn solve_part1() -> String {
 }
 
 fn solve_part2() -> String {
+    let lines = aoc2022::read_file_to_strings("data/day05.txt");
+    let moves = lines_to_moves(lines);
+    let mut stacks = get_stacks();
+    let stacks = perform_moves(stacks, moves, true);
+
+    for (k, val) in &stacks {
+        println!("{}: {}", k, val.borrow().last().unwrap());
+    }
+
     String::from("World")
 }
 
