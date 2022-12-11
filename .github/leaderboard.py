@@ -62,8 +62,9 @@ def get_leaderboard(data: Dict[str, Any]) -> Dict[int, Set[MemberScore]]:
     # group members by total number of stars
     result: DefaultDict[int, Set[MemberScore]] = defaultdict(set)
 
-    for value in members_json.values():
-        member = MemberScore(value["name"], value["local_score"], value["stars"])
+    for member_id, value in members_json.items():
+        name = value["name"] or f"Anonymous User {member_id}"
+        member = MemberScore(name, value["local_score"], value["stars"])
         result[member.stars].add(member)
 
     return result
