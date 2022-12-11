@@ -138,7 +138,7 @@ def format_leader_message(members: Dict[int, Set[MemberScore]]) -> str:
             lines.append(f"{num_stars} :star:")
 
         # Sort once alphabetically, then randomly (to allow testing with fixed seed)
-        for member in sorted(sorted(members_with_stars), key=lambda _: random.random()):
+        for member in sorted(members_with_stars, key=lambda _: random.random()):
             lines.append(f"    - {member.name}")
 
     lines.append(f"\n<{LEADERBOARD_URL}|View Leaderboard Online>")
