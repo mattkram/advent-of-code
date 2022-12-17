@@ -12,14 +12,7 @@ DIRECTION_MAP = {
 }
 
 
-def parse_data(lines: list[str]) -> list[list[int]]:
-    data = []
-    for line in lines:
-        data.append([int(c) for c in line])
-    return data
-
-
-def solve_part1() -> int:
+def simulate(num_knots):
     path = Path("data", "day09.txt")
     moves = []
     with path.open() as fp:
@@ -28,30 +21,35 @@ def solve_part1() -> int:
                 continue
             direction, distance = line.strip().split(" ")
             moves.append((direction, int(distance)))
+    knots = [(0, 0) for _ in range(num_knots)]
 
-    head_pos = (0, 0)
-    tail_pos = (0, 0)
     visited = set()
 
     for direction, distance in moves:
         vector = DIRECTION_MAP[direction]
         for _ in range(distance):
-            head_pos = (head_pos[0] + vector[0], head_pos[1] + vector[1])
-            delta = (head_pos[0] - tail_pos[0], head_pos[1] - tail_pos[1])
-            distance = (abs(delta[0]), abs(delta[1]))
-            if any(d > 1 for d in distance):
-                tail_pos = (
-                    tail_pos[0] + delta[0] / (distance[0] or 1),
-                    tail_pos[1] + delta[1] / (distance[1] or 1),
-                )
+            # Move the head knot
+            knots[0] = (knots[0][0] + vector[0], knots[0][1] + vector[1])
+            for idx, (leader, follower) in enumerate(zip(knots, knots[1:]), start=1):
+                delta = (leader[0] - follower[0], leader[1] - follower[1])
+                distance = (abs(delta[0]), abs(delta[1]))
+                if any(d > 1 for d in distance):
+                    knots[idx] = (
+                        follower[0] + delta[0] / (distance[0] or 1),
+                        follower[1] + delta[1] / (distance[1] or 1),
+                    )
 
-            visited.add(tail_pos)
+            visited.add(knots[-1])
 
     return len(visited)
 
 
+def solve_part1() -> int:
+    return simulate(num_knots=2)
+
+
 def solve_part2() -> int:
-    return 0
+    return simulate(num_knots=10)
 
 
 if __name__ == "__main__":
