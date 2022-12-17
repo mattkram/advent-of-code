@@ -56,6 +56,43 @@ def solve_part1() -> int:
 
 
 def solve_part2() -> int:
+    path = Path("data", "day08.txt")
+    with path.open() as fp:
+        lines = [line.strip() for line in fp]
+
+    data = parse_data(lines)
+
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+    num_rows = len(data)
+    num_cols = len(data[0])
+
+    max_scenic_score = 0
+    for row in range(1, num_rows - 1):
+        for col in range(1, num_cols - 1):
+            base_pos = (row, col)
+            base_ht = data[row][col]
+            distances = []
+            for d in directions:
+                dist = 1
+                while True:
+                    pos = (base_pos[0] + dist * d[0], base_pos[1] + dist * d[1])
+                    if (
+                        pos[0] <= 0
+                        or pos[1] <= 0
+                        or pos[0] >= num_rows - 1
+                        or pos[1] >= num_cols - 1
+                    ):
+                        break
+                    ht = data[pos[0]][pos[1]]
+                    if ht >= base_ht:
+                        break
+                    dist += 1
+                distances.append(dist)
+            scenic_score = distances[0] * distances[1] * distances[2] * distances[3]
+            max_scenic_score = max(scenic_score, max_scenic_score)
+    return max_scenic_score
+
     return 0
 
 
