@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import string
+from heapq import heappop
+from heapq import heappush
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parents[1]
@@ -30,26 +32,35 @@ def load_input() -> tuple[dict[Coord, str], Coord, Coord]:
     return board, start, end
 
 
-def solve_part1() -> int:
-    """We implement Dijkstra's algorithm to find the shortest path."""
-    squares, source, end = load_input()
+def get_shortest_distance(squares, source, end) -> int:
 
-    dist = {}
-    Q = set()
+    dist = {source: 0}
+    Q = []
+    remaining = set()
     for v in squares:
-        dist[v] = INFINITY
-        Q.add(v)
+        if v != source:
+            dist[v] = INFINITY
+        heappush(Q, (dist[v], v))
+        remaining.add(v)
 
-    dist[source] = 0
-
+    # We need to track any items that should get removed from the priority queue
+    # since we will change priority throughout
+    removed = set()
     while Q:
-        u = min(Q, key=lambda v: dist[v])
-        Q.remove(u)
+        try:
+            # Pop off removed items until we get one that's not removed
+            while (item := heappop(Q)) in removed:
+                removed.remove(item)
+        except IndexError:
+            # We may try to pop the last removed square, so we should break out
+            break
+        _, u = item
+        remaining.remove(u)
         el_u = ELEVATIONS[squares[u]]
         for offset in [(+1, 0), (-1, 0), (0, +1), (0, -1)]:
             # v is the potential neighboring node
             v = (u[0] + offset[0], u[1] + offset[1])
-            if v not in Q:
+            if v not in remaining:
                 # Not in graph
                 continue
             el_v = ELEVATIONS[squares[v]]
@@ -57,13 +68,27 @@ def solve_part1() -> int:
                 # Ineligible neighbor (too high of a step)
                 continue
             # The potential distance from u->v is 1
-            dist[v] = min(dist[v], dist[u] + 1)
+            alt = dist[u] + 1
+            if alt < dist[v]:
+                # Mark this specific old entry as removed
+                removed.add((dist[v], v))
+                dist[v] = alt
+                # Add the new one to the priority queue
+                heappush(Q, (alt, v))
 
     return dist[end]
 
 
+def solve_part1() -> int:
+    """We implement Dijkstra's algorithm to find the shortest path."""
+    squares, source, end = load_input()
+    return get_shortest_distance(squares, source, end)
+
+
 def solve_part2() -> int:
-    return 0
+    squares, _, end = load_input()
+    sources = {k for k, v in squares.items() if v in {"a", "S"}}
+    return min(get_shortest_distance(squares, source, end) for source in sources)
 
 
 if __name__ == "__main__":
