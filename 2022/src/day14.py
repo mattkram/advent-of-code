@@ -39,10 +39,10 @@ def load_input() -> set[tuple[int, int]]:
     return rocks
 
 
-def drop_sand(rocks, sand):
-    max_y = 0
-    for (_, y) in rocks:
-        max_y = max(max_y, y)
+def drop_sand(rocks, sand, max_y, include_floor=False):
+    # TODO: This is very slow. We actually should only need to track the
+    #       rocks and top layer of sand in each column, I think,
+    #       which would potentially speed up the contact lookup significantly
     pos = START
     while True:
         if pos[1] > max_y:
@@ -50,11 +50,14 @@ def drop_sand(rocks, sand):
         below = pos[0], pos[1] + 1
         below_left = pos[0] - 1, pos[1] + 1
         below_right = pos[0] + 1, pos[1] + 1
-        if below not in rocks | sand:
+        if include_floor and below[1] == max_y:
+            return pos
+        taken = rocks | sand
+        if below not in taken:
             pos = below
-        elif below_left not in rocks | sand:
+        elif below_left not in taken:
             pos = below_left
-        elif below_right not in rocks | sand:
+        elif below_right not in taken:
             pos = below_right
         else:
             return pos
@@ -64,14 +67,40 @@ def solve_part1() -> int:
     rocks = load_input()
     sand = set()
 
-    while (landing := drop_sand(rocks, sand)) is not None:
+    max_y = 0
+    for (_, y) in rocks:
+        max_y = max(max_y, y)
+
+    while (landing := drop_sand(rocks, sand, max_y)) is not None:
         sand.add(landing)
 
     return len(sand)
 
 
 def solve_part2() -> int:
-    return 0
+    rocks = load_input()
+    sand = set()
+
+    max_y = 0
+    for (_, y) in rocks:
+        max_y = max(max_y, y)
+
+    # for x in range(200, 800):
+    #     rocks.add((x, max_y + 2))
+
+    it = 0
+    while True:
+        landing = drop_sand(rocks, sand, max_y + 2, include_floor=True)
+        if landing is None:
+            break
+        if it % 100 == 0:
+            print(landing)
+        sand.add(landing)
+        if landing == START:
+            break
+        it += 1
+
+    return len(sand)
 
 
 if __name__ == "__main__":
