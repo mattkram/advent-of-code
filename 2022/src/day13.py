@@ -13,6 +13,13 @@ class Packet:
         self.raw = s
         self.value: PacketValue = eval(s)
 
+    @property
+    def is_divider(self) -> bool:
+        return self.raw in {"[[2]]", "[[6]]"}
+
+    def __repr__(self) -> str:
+        return str(self.value)
+
     def __lt__(self, other: Packet) -> bool:
         try:
             compare_values(self.value, other.value)
@@ -75,9 +82,9 @@ def compare_values(left: PacketValue, right: PacketValue, level: int = 0) -> Non
 
 
 def solve_part1() -> int:
-    instructions = load_input()
+    packets = load_input()
     num_ordered = 0
-    for i, (first, second) in enumerate(instructions, start=1):
+    for i, (first, second) in enumerate(packets, start=1):
         print(f"== Pair {i} ==")
         if first < second:
             num_ordered += i
@@ -86,7 +93,17 @@ def solve_part1() -> int:
 
 
 def solve_part2() -> int:
-    return 0
+    packets = load_input()
+    flat_packets = [Packet("[[2]]"), Packet("[[6]]")]
+    for first, second in packets:
+        flat_packets.extend([first, second])
+    flat_packets.sort()
+
+    result = 1
+    for i, packet in enumerate(flat_packets, start=1):
+        if packet.is_divider:
+            result *= i
+    return result
 
 
 if __name__ == "__main__":
