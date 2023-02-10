@@ -61,7 +61,6 @@ def get_num_wins(
     player: int = None,
     roll_total: int = None,
 ) -> Tuple[int, int]:
-
     if roll_total is not None:
         if player == 1:
             position_1 = (position_1 + roll_total - 1) % 10 + 1

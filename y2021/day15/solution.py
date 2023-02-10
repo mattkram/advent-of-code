@@ -14,7 +14,6 @@ Graph = Dict[Tuple[int, int], "Node"]
 
 
 class Node:
-
     NODE_COUNT = 0
 
     def __init__(self, energy: int):

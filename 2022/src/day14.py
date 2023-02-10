@@ -68,7 +68,7 @@ def solve_part1() -> int:
     sand = set()
 
     max_y = 0
-    for (_, y) in rocks:
+    for _, y in rocks:
         max_y = max(max_y, y)
 
     while (landing := drop_sand(rocks, sand, max_y)) is not None:
@@ -82,7 +82,7 @@ def solve_part2() -> int:
     sand = set()
 
     max_y = 0
-    for (_, y) in rocks:
+    for _, y in rocks:
         max_y = max(max_y, y)
 
     # for x in range(200, 800):

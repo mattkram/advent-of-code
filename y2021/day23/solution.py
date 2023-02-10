@@ -68,7 +68,6 @@ def print_board(board: Board) -> None:
 
 
 def get_next_steps(board: Board) -> List[Board]:
-
     # Here, we look for any opportunities to move a hallway pod to its target column
     clear_hallway = True
     while clear_hallway:
