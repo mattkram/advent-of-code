@@ -1,11 +1,11 @@
 name: Publish Advent of Code Statistics to Personal Slack
 
 on:
-  schedule:
-    # 10pm Central time, December 1-30
-    - cron:  '0 4 2-31 12 *'
-    # 10pm Central time, December 31 & January 1
-    - cron:  '0 4 1-2 1 *'
+#   schedule:
+#    # 10pm Central time, December 1-30
+#     - cron:  '0 4 2-31 12 *'
+#    # 10pm Central time, December 31 & January 1
+#    - cron:  '0 4 1-2 1 *'
   workflow_dispatch:
 
 jobs:
