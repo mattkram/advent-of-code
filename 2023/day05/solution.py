@@ -50,21 +50,13 @@ def calculate(input_str: str) -> int:
 
     result = 1_000_000_000
     for seed in seeds:
-        print(seed)
         destination = "seed"
         val = seed
-        # msg = f"{destination} {val}"
-        # print(msg)
 
         while d := mapping.get(destination):
             destination = d["destination"]
-            # s = d['submap']
-            # val = s.get(val, val)
             val = get_value(val, d["ranges"])
-            # msg = f"{destination} {val}"
-            # print(msg)
 
-        # print(f"Final value: {val}")
         result = min(val, result)
 
     return result
