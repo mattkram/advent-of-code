@@ -17,7 +17,6 @@ def parse(input_str: str) -> None:
     line_iter = get_line()
 
     seeds_to_plant = [int(s) for s in next(line_iter).removeprefix("seeds:").split()]
-    print(seeds_to_plant)
 
     key, destination = "", ""
     for line in line_iter:
@@ -25,25 +24,15 @@ def parse(input_str: str) -> None:
             continue
 
         if m := re.match(r"(\w+)-to-(\w+) map:", line.strip()):
-            print(m.group(1), m.group(2))
             key, destination = m.group(1), m.group(2)
             mapping[key]["destination"] = destination
             mapping[key]["submap"] = {}
 
         else:
             dest_start, source_start, range_len = [int(s) for s in line.split()]
-            # def f(v):
-            #     diff = v - source_start
-            #     if diff <= range_len:
-            #         return v + (source_start - dest_start)
-            #     return v
-            # mapping[key]['get'] = f
             if "ranges" not in mapping[key]:
                 mapping[key]["ranges"] = []
             mapping[key]["ranges"].append((dest_start, source_start, range_len))
-            # for i in range(range_len):
-            #     mapping[key]["submap"][source_start + i] = dest_start + i
-            pass
 
     return seeds_to_plant, dict(mapping)
 
