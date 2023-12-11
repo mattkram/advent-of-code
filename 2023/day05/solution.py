@@ -30,36 +30,107 @@ def parse(input_str: str) -> None:
 
         else:
             dest_start, source_start, range_len = [int(s) for s in line.split()]
-            if "ranges" not in mapping[key]:
-                mapping[key]["ranges"] = []
-            mapping[key]["ranges"].append((dest_start, source_start, range_len))
+            if "maps" not in mapping[key]:
+                mapping[key]["maps"] = []
+            mapping[key]["maps"].append((dest_start, source_start, range_len))
 
     return seeds_to_plant, dict(mapping)
 
 
-def get_value(v, ranges):
-    for dest_start, source_start, range_len in ranges:
-        diff = v - source_start
-        if 0 <= diff <= range_len:
-            return dest_start + diff
-    return v
+def apply_maps_to_range(rng, maps):
+    splits = set([rng])
+    rngs_out = set()
+
+    for m in maps:
+        dest_start, source_start, range_len = m
+
+        # The start and end of the map
+        map_st, map_end = source_start, source_start + range_len - 1
+
+        # The delta to add if a subrange matches the map range
+        diff = dest_start - source_start
+
+        # Make a copy so we can mutate it
+        tmp_splits = set(splits)
+        for rng_st, rng_end in splits:
+            tmp_rng = (rng_st, rng_end)
+
+            if map_st <= rng_st <= rng_end <= map_end:
+                # Map completely overlaps the range, remove it from the splits set
+                # and apply the map.
+                tmp_splits.remove((rng_st, rng_end))
+                rngs_out.add((rng_st + diff, rng_end + diff))
+            elif rng_st <= map_st <= map_end <= rng_end:
+                # Range completely overlaps the range, we need to split it three-ways
+                rngs_out.add((map_st + diff, map_end + diff))
+                tmp_splits.remove(tmp_rng)
+                tmp_splits.add((rng_st, map_st - 1))
+                tmp_splits.add((map_end + 1, rng_end))
+            elif rng_st <= map_end <= rng_end:
+                # Partial overlap left
+                # Apply the map to the part inside the range
+                rngs_out.add((rng_st + diff, map_end + diff))
+
+                # Remove original range
+                # Split off part outside the range, don't add a delta
+                tmp_splits.remove(tmp_rng)
+                tmp_splits.add((map_end + 1, rng_end))
+            elif rng_st <= map_st <= rng_end:
+                # Partial overlap right
+                # Apply the map to the part inside the range
+                rngs_out.add((map_st + diff, rng_end + diff))
+
+                # Remove original range
+                # Split off part outside the range, don't add a delta
+                tmp_splits.remove(tmp_rng)
+                tmp_splits.add((rng_st, map_st - 1))
+            else:
+                # No overlap, skipping
+                pass
+
+        # Copy the mutated splits for the next map to assess
+        splits = tmp_splits
+
+    # Anything left in the splits, add to the result as-is
+    for s in splits:
+        rngs_out.add(s)
+
+    return rngs_out
 
 
-def calculate(input_str: str) -> int:
+def apply_maps(ranges, maps):
+    ranges_in = set(ranges)
+    ranges_out = set()
+
+    for rng in ranges_in:
+        new_ranges = apply_maps_to_range(rng, maps)
+        ranges_out.update(new_ranges)
+
+    return ranges_out
+
+
+def calculate(input_str: str, ranges: bool = False) -> int:
     seeds, mapping = parse(input_str)  # noqa: F841
 
-    result = 1_000_000_000
-    for seed in seeds:
-        destination = "seed"
-        val = seed
+    if not ranges:
+        # A list of individual seeds is just a set of length-one ranges
+        seeds = {(i, i) for i in seeds}
+    else:
+        new_seeds = []
+        num_pairs = len(seeds) // 2
+        for pair in range(num_pairs):
+            i = 2 * pair
+            r = (seeds[i], seeds[i] + seeds[i + 1] - 1)
+            new_seeds.append(r)
+        seeds = set(new_seeds)
 
-        while d := mapping.get(destination):
-            destination = d["destination"]
-            val = get_value(val, d["ranges"])
+    destination = "seed"
+    while d := mapping.get(destination):
+        destination = d["destination"]
+        seeds = apply_maps(seeds, d["maps"])
+        print(seeds)
 
-        result = min(val, result)
-
-    return result
+    return min(seeds)[0]
 
 
 def main() -> None:
