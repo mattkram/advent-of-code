@@ -128,7 +128,6 @@ def calculate(input_str: str, ranges: bool = False) -> int:
     while d := mapping.get(destination):
         destination = d["destination"]
         seeds = apply_maps(seeds, d["maps"])
-        print(seeds)
 
     return min(seeds)[0]
 
