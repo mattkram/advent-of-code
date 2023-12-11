@@ -50,22 +50,21 @@ def apply_maps_to_range(rng, maps):
         # The delta to add if a subrange matches the map range
         diff = dest_start - source_start
 
-        # Make a copy so we can mutate it
-        tmp_splits = set(splits)
-        for rng_st, rng_end in splits:
+        # Make a copy so we can mutate the original
+        for rng_st, rng_end in set(splits):
             tmp_rng = (rng_st, rng_end)
 
             if map_st <= rng_st <= rng_end <= map_end:
                 # Map completely overlaps the range, remove it from the splits set
                 # and apply the map.
-                tmp_splits.remove((rng_st, rng_end))
+                splits.remove((rng_st, rng_end))
                 rngs_out.add((rng_st + diff, rng_end + diff))
             elif rng_st <= map_st <= map_end <= rng_end:
                 # Range completely overlaps the range, we need to split it three-ways
                 rngs_out.add((map_st + diff, map_end + diff))
-                tmp_splits.remove(tmp_rng)
-                tmp_splits.add((rng_st, map_st - 1))
-                tmp_splits.add((map_end + 1, rng_end))
+                splits.remove(tmp_rng)
+                splits.add((rng_st, map_st - 1))
+                splits.add((map_end + 1, rng_end))
             elif rng_st <= map_end <= rng_end:
                 # Partial overlap left
                 # Apply the map to the part inside the range
@@ -73,8 +72,8 @@ def apply_maps_to_range(rng, maps):
 
                 # Remove original range
                 # Split off part outside the range, don't add a delta
-                tmp_splits.remove(tmp_rng)
-                tmp_splits.add((map_end + 1, rng_end))
+                splits.remove(tmp_rng)
+                splits.add((map_end + 1, rng_end))
             elif rng_st <= map_st <= rng_end:
                 # Partial overlap right
                 # Apply the map to the part inside the range
@@ -82,14 +81,11 @@ def apply_maps_to_range(rng, maps):
 
                 # Remove original range
                 # Split off part outside the range, don't add a delta
-                tmp_splits.remove(tmp_rng)
-                tmp_splits.add((rng_st, map_st - 1))
+                splits.remove(tmp_rng)
+                splits.add((rng_st, map_st - 1))
             else:
                 # No overlap, skipping
                 pass
-
-        # Copy the mutated splits for the next map to assess
-        splits = tmp_splits
 
     # Anything left in the splits, add to the result as-is
     for s in splits:
@@ -99,10 +95,10 @@ def apply_maps_to_range(rng, maps):
 
 
 def apply_maps(ranges, maps):
-    ranges_in = set(ranges)
+    """Apply a series of maps to a set of ranges, returning the modified ranges"""
     ranges_out = set()
 
-    for rng in ranges_in:
+    for rng in ranges:
         new_ranges = apply_maps_to_range(rng, maps)
         ranges_out.update(new_ranges)
 
