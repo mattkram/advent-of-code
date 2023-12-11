@@ -56,7 +56,6 @@ def is_valid(msg: Union[str, deque], rules: RulesDict, rule_ind: int = 0) -> boo
 
 
 def get_combinations(rules: RulesDict, rule_ind: int = 0) -> Set[str]:
-
     rule = rules[rule_ind]
 
     if isinstance(rule, str):

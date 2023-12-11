@@ -24,7 +24,7 @@ class Board:
     def get_num_active_neighbors(self, coords: Coordinate) -> int:
         (x, y, z) = coords
         num_neighbors = 0
-        for (dx, dy, dz) in itertools.product([-1, 0, 1], repeat=3):
+        for dx, dy, dz in itertools.product([-1, 0, 1], repeat=3):
             if (dx, dy, dz) == (0, 0, 0):
                 continue
             neighbor_state = self[x + dx, y + dy, z + dz]

@@ -19,7 +19,6 @@ class OrbitalMap:
         self.load_input(input_list)
 
     def load_input(self, input_list: List[str]) -> None:
-
         # Map children to parent strings (children are unique, parents are not)
         parent_map = {}
         for line in input_list:

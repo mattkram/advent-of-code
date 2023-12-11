@@ -33,7 +33,6 @@ def load_input() -> tuple[dict[Coord, str], Coord, Coord]:
 
 
 def get_shortest_distance(squares, source, end) -> int:
-
     dist = {source: 0}
     Q = []
     remaining = set()

@@ -62,7 +62,6 @@ class ScannerReport:
                 [-1, 1], [-1, 1], [-1, 1], itertools.permutations([0, 1, 2])
             )
         ):
-
             # print(y_mult, z_mult, indices)
             scanner_report = ScannerReport()
             scanner_report.scanner_number = self.scanner_number
@@ -91,7 +90,6 @@ class ScannerReport:
         for i, (prelim, x_rot) in enumerate(
             itertools.product(prelims, [0, 90, 180, 270])
         ):
-
             # print(y_mult, z_mult, indices)
             scanner_report = ScannerReport()
             scanner_report.scanner_number = self.scanner_number

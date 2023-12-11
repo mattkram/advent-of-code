@@ -1,11 +1,11 @@
 name: Publish Advent of Code Statistics to Personal Slack
 
 on:
-  schedule:
-    # 10pm Central time, December 1-30
-    - cron:  '0 4 2-31 12 *'
-    # 10pm Central time, December 31 & January 1
-    - cron:  '0 4 1-2 1 *'
+#   schedule:
+#    # 10pm Central time, December 1-30
+#     - cron:  '0 4 2-31 12 *'
+#    # 10pm Central time, December 31 & January 1
+#    - cron:  '0 4 1-2 1 *'
   workflow_dispatch:
 
 jobs:
@@ -13,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1.1.6
+        uses: snok/install-poetry@v1.3.4
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
