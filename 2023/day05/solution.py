@@ -37,9 +37,9 @@ def parse(input_str: str) -> None:
     return seeds_to_plant, dict(mapping)
 
 
-def apply_maps_to_range(rng, maps):
-    splits = set([rng])
-    rngs_out = set()
+def apply_maps_to_range(range_in, maps):
+    splits = {range_in}  # Ranges that don't need to have a map applied
+    ranges_out = set()  # Complete set of all ranges, with and without maps applied
 
     for m in maps:
         dest_start, source_start, range_len = m
@@ -58,17 +58,17 @@ def apply_maps_to_range(rng, maps):
                 # Map completely overlaps the range, remove it from the splits set
                 # and apply the map.
                 splits.remove((rng_st, rng_end))
-                rngs_out.add((rng_st + diff, rng_end + diff))
+                ranges_out.add((rng_st + diff, rng_end + diff))
             elif rng_st <= map_st <= map_end <= rng_end:
                 # Range completely overlaps the range, we need to split it three-ways
-                rngs_out.add((map_st + diff, map_end + diff))
+                ranges_out.add((map_st + diff, map_end + diff))
                 splits.remove(tmp_rng)
                 splits.add((rng_st, map_st - 1))
                 splits.add((map_end + 1, rng_end))
             elif rng_st <= map_end <= rng_end:
                 # Partial overlap left
                 # Apply the map to the part inside the range
-                rngs_out.add((rng_st + diff, map_end + diff))
+                ranges_out.add((rng_st + diff, map_end + diff))
 
                 # Remove original range
                 # Split off part outside the range, don't add a delta
@@ -77,7 +77,7 @@ def apply_maps_to_range(rng, maps):
             elif rng_st <= map_st <= rng_end:
                 # Partial overlap right
                 # Apply the map to the part inside the range
-                rngs_out.add((map_st + diff, rng_end + diff))
+                ranges_out.add((map_st + diff, rng_end + diff))
 
                 # Remove original range
                 # Split off part outside the range, don't add a delta
@@ -89,9 +89,9 @@ def apply_maps_to_range(rng, maps):
 
     # Anything left in the splits, add to the result as-is
     for s in splits:
-        rngs_out.add(s)
+        ranges_out.add(s)
 
-    return rngs_out
+    return ranges_out
 
 
 def apply_maps(ranges, maps):
