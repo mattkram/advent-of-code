@@ -49,8 +49,8 @@ with INPUTS_FILE.open("r") as fp:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (TEST_INPUT, 35),
-        (REAL_INPUT, 261668924),
+        pytest.param(TEST_INPUT, 35, id="test-input"),
+        pytest.param(REAL_INPUT, 261668924, id="real-data"),
     ],
 )
 def test_part1(input_str: str, expected: int) -> None:
@@ -60,8 +60,8 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        (TEST_INPUT, 46),
-        (REAL_INPUT, 24261545),
+        pytest.param(TEST_INPUT, 46, id="test-input"),
+        pytest.param(REAL_INPUT, 24261545, id="real-data"),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
