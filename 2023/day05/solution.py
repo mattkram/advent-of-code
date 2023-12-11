@@ -25,13 +25,13 @@ def parse(input_str: str) -> None:
 
         if m := re.match(r"(\w+)-to-(\w+) map:", line.strip()):
             key, destination = m.group(1), m.group(2)
-            mapping[key]["destination"] = destination
-            mapping[key]["submap"] = {}
+            mapping[key] = {
+                "destination": destination,
+                "maps": [],
+            }
 
         else:
             dest_start, source_start, range_len = [int(s) for s in line.split()]
-            if "maps" not in mapping[key]:
-                mapping[key]["maps"] = []
             mapping[key]["maps"].append((dest_start, source_start, range_len))
 
     return seeds_to_plant, dict(mapping)
@@ -41,8 +41,7 @@ def apply_maps_to_range(range_in, maps):
     splits = {range_in}  # Ranges that don't need to have a map applied
     ranges_out = set()  # Complete set of all ranges, with and without maps applied
 
-    for m in maps:
-        dest_start, source_start, range_len = m
+    for dest_start, source_start, range_len in maps:
 
         # The start and end of the map
         map_st, map_end = source_start, source_start + range_len - 1
@@ -88,8 +87,7 @@ def apply_maps_to_range(range_in, maps):
                 pass
 
     # Anything left in the splits, add to the result as-is
-    for s in splits:
-        ranges_out.add(s)
+    ranges_out.update(splits)
 
     return ranges_out
 
