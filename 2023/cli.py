@@ -21,11 +21,11 @@ def main() -> None:
 
 
 @app.command()
-def get() -> None:
+def get(day: int = typer.Option()) -> None:
     """Get data for a certain day."""
     year = 2023
-    day = 6
     input_file = Path(f"day{day:02}", "input.txt")
+    input_file.parent.mkdir(parents=True, exist_ok=True)
 
     if input_file.exists():
         console.print(f"Data file [cyan]{input_file}[/cyan] exists, skipping request")
@@ -36,7 +36,6 @@ def get() -> None:
         cookies={"session": SESSION_COOKIE},
     )
     assert response.status_code == 200
-    console.print(response.text)
     content = response.text
     with input_file.open("w") as fp:
         fp.write(content)
