@@ -23,11 +23,15 @@ def parse(input_str: str) -> None:
 
 
 def count_ways_to_win(time, distance):
-    result = 0
-    for t in range(time + 1):
+    # Iterate until we break the distance record.
+    # Then, since this is some type of symmetric sequence, we can just calculate the rest with math.
+    t = 0
+    while t <= time:
         if (time - t) * t > distance:
-            result += 1
-    return result
+            break
+        t += 1
+
+    return time - (t * 2) + 1
 
 
 def calculate(input_str: str) -> int:
@@ -36,7 +40,8 @@ def calculate(input_str: str) -> int:
 
     ways_to_win = []
     for time, distance in races:
-        ways_to_win.append(count_ways_to_win(time, distance))
+        w = count_ways_to_win(time, distance)
+        ways_to_win.append(w)
 
     return math.prod(ways_to_win)
 
