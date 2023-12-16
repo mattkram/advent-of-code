@@ -4,7 +4,7 @@ from pathlib import Path
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
-def parse(input_str: str) -> None:
+def parse(input_str: str, concat: bool) -> None:
     times = []
     distances = []
     for line in input_str.splitlines():
@@ -18,7 +18,15 @@ def parse(input_str: str) -> None:
         elif line.startswith("Distance:"):
             distances.extend(int(d) for d in line.split()[1:])
 
-    races = list(zip(times, distances))
+    if not concat:
+        races = list(zip(times, distances))
+    else:
+        races = [
+            (
+                int("".join(str(t) for t in times)),
+                int("".join(str(d) for d in distances)),
+            )
+        ]
     return races
 
 
@@ -34,9 +42,8 @@ def count_ways_to_win(time, distance):
     return time - (t * 2) + 1
 
 
-def calculate(input_str: str) -> int:
-    print()
-    races = parse(input_str)
+def calculate(input_str: str, concat: bool = False) -> int:
+    races = parse(input_str, concat=concat)
 
     ways_to_win = []
     for time, distance in races:
@@ -50,7 +57,7 @@ def main() -> None:
     with INPUTS_FILE.open() as fp:
         input_str = fp.read()
         print(f"The answer to part 1 is {calculate(input_str)}")
-        print(f"The answer to part 2 is {calculate(input_str)}")
+        print(f"The answer to part 2 is {calculate(input_str, concat=True)}")
 
 
 if __name__ == "__main__":
