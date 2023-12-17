@@ -24,8 +24,9 @@ class Card:
 
 
 class Hand:
-    def __init__(self, line: str):
+    def __init__(self, line: str, part: int = 1):
         cards, bid = line.split()
+        self.part = part
         self.cards_str = cards
 
         self._bid = int(bid)
@@ -37,7 +38,23 @@ class Hand:
         """Assign an integer value based on the hand type."""
         c = Counter(c.value for c in self._cards)
         counts = dict(c)
-        s = tuple(sorted(counts.values(), reverse=True))
+
+        s = sorted(counts.values(), reverse=True)
+        if self.part == 2 and 1 in counts:
+            num_jokers = counts[1]
+            if num_jokers == 5:
+                self.type = "Five of a kind!"
+                return 6
+            # The joker(s) get added to the most-counted card
+            if s[0] != num_jokers:
+                s[0] += num_jokers
+            else:
+                s[1] += num_jokers
+
+            # To account for this, we need to remove the count of the joker
+            s.remove(num_jokers)
+
+        s = tuple(s)
         if s == (5,):
             self.type = "Five of a kind!"
             return 6
@@ -71,10 +88,15 @@ class Hand:
 
 
 def parse(input_str: str, part: int) -> list[Hand]:
-    return [Hand(line) for line in input_str.splitlines()]
+    return [Hand(line, part=part) for line in input_str.splitlines()]
 
 
 def calculate(input_str: str, part: int = 1) -> int:
+    if part == 2:
+        Card._value_map["J"] = 1
+    else:
+        Card._value_map["J"] = 11
+
     hands = parse(input_str, part=part)
     result = 0
     for i, hand in enumerate(sorted(hands), start=1):

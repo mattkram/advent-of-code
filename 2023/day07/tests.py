@@ -36,8 +36,8 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        pytest.param(TEST_INPUT, 71503, id="test-input"),
-        # pytest.param(REAL_INPUT, 27102791, id="real-data"),
+        pytest.param(TEST_INPUT, 5905, id="test-input"),
+        pytest.param(REAL_INPUT, 244848487, id="real-data"),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
