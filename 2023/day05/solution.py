@@ -42,7 +42,6 @@ def apply_maps_to_range(range_in, maps):
     ranges_out = set()  # Complete set of all ranges, with and without maps applied
 
     for dest_start, source_start, range_len in maps:
-
         # The start and end of the map
         map_st, map_end = source_start, source_start + range_len - 1
 
