@@ -19,6 +19,20 @@ TEST_INPUT = textwrap.dedent(
     ZZZ = (ZZZ, ZZZ)
     """
 )
+TEST_INPUT_2 = textwrap.dedent(
+    """\
+    LR
+
+    11A = (11B, XXX)
+    11B = (XXX, 11Z)
+    11Z = (11B, XXX)
+    22A = (22B, XXX)
+    22B = (22C, 22C)
+    22C = (22Z, 22Z)
+    22Z = (22B, 22B)
+    XXX = (XXX, XXX)
+    """
+)
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
@@ -40,8 +54,8 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        pytest.param(TEST_INPUT, 5905, id="test-input"),
-        pytest.param(REAL_INPUT, 244848487, id="real-data"),
+        pytest.param(TEST_INPUT_2, 6, id="test-input"),
+        pytest.param(REAL_INPUT, 10818234074807, id="real-data"),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:
