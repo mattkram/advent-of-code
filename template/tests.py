@@ -1,3 +1,4 @@
+import textwrap
 from pathlib import Path
 
 import pytest
@@ -5,10 +6,12 @@ import pytest
 from .solution import calculate_part1
 from .solution import calculate_part2
 
-TEST_INPUT = """
+TEST_INPUT = textwrap.dedent(
+    """\
     some_input
     abc
-"""
+    """
+)
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
