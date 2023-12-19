@@ -1,4 +1,5 @@
 import os
+import shutil
 from pathlib import Path
 
 import requests
@@ -9,7 +10,9 @@ from rich.console import Console
 load_dotenv()
 
 SESSION_COOKIE = os.environ.get("SESSION_COOKIE")
-
+ROOT_DIR = Path.cwd()
+while not (TEMPLATE_DIR := ROOT_DIR / "template").exists():
+    ROOT_DIR = ROOT_DIR.parent
 
 app = typer.Typer(add_completion=False, help="Welcome to the Anaconda CLI!")
 console = Console()
@@ -24,8 +27,17 @@ def main() -> None:
 def get(day: int = typer.Option()) -> None:
     """Get data for a certain day."""
     year = 2023
-    input_file = Path(f"day{day:02}", "input.txt")
+    day_dir = Path(ROOT_DIR, str(year), f"day{day:02}")
+    input_file = day_dir / "input.txt"
     input_file.parent.mkdir(parents=True, exist_ok=True)
+
+    for f in TEMPLATE_DIR.glob("*"):
+        dst = day_dir / f.name
+        if not dst.exists():
+            console.print(f"Copying from [cyan]{f}[/cyan] to [cyan]{dst}[/cyan]")
+            shutil.copyfile(f, dst)
+        else:
+            console.print(f"Destination file [cyan]{dst}[/cyan] already exists.")
 
     if input_file.exists():
         console.print(f"Data file [cyan]{input_file}[/cyan] exists, skipping request")
