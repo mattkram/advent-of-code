@@ -5,6 +5,8 @@ from pathlib import Path
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
+DAMAGED_PATTERN = re.compile(r"#+")
+
 
 def parse(input_str: str) -> list[tuple[str, tuple[int, ...]]]:
     lines = [s.strip() for s in input_str.splitlines() if s.strip()]
@@ -24,7 +26,7 @@ def count_possibilities(pattern, counts):
     total = sum(counts)
 
     # The number of spaces to fill with a #
-    num_known = sum(1 for v in pattern if v == "#")
+    num_known = sum(v == "#" for v in pattern)
     num_to_add = total - num_known
 
     # Iterate through all the combinations where we can substitute # for ?
@@ -36,11 +38,15 @@ def count_possibilities(pattern, counts):
         possible_pattern = "".join(tmp_pattern).replace("?", ".")
 
         # Extract all instances of one or more # in a row
-        segments = re.findall(r"#+", possible_pattern)
+        segments = DAMAGED_PATTERN.findall(possible_pattern)
 
         # Check that the lengths are equal to the target, and if so add that as a possibility
-        actual_counts = tuple(len(s) for s in segments)
-        if actual_counts == counts:
+        # This is a silly optimization that cut ~15% off the speed by exiting early instead
+        # of constructing a tuple
+        for s, c in itertools.zip_longest(segments, counts):
+            if len(s) != c:
+                break
+        else:
             num_possibilities += 1
 
     return num_possibilities
