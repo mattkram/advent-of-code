@@ -37,7 +37,7 @@ def find_expansions(galaxies: set[tuple[int, int]]) -> tuple[set[int], set[int]]
     return rows, cols
 
 
-def calculate_part1(input_str: str) -> int:
+def calculate_part1(input_str: str, expansion_factor=2) -> int:
     galaxies = parse(input_str)
     expansion_rows, expansion_cols = find_expansions(galaxies)
 
@@ -56,19 +56,18 @@ def calculate_part1(input_str: str) -> int:
         # Add extra for each expanding row or column in the range
         for x in range(x_min, x_max + 1):
             if x in expansion_cols:
-                dist += 1
+                dist += expansion_factor - 1
 
         for y in range(y_min, y_max + 1):
             if y in expansion_rows:
-                dist += 1
+                dist += expansion_factor - 1
 
         result += dist
     return result
 
 
-def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+def calculate_part2(input_str: str, expansion_factor: int) -> int:
+    return calculate_part1(input_str, expansion_factor=expansion_factor)
 
 
 def main() -> None:
