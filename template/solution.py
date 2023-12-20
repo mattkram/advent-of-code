@@ -6,7 +6,8 @@ INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
 def parse(input_str: str) -> List[int]:
-    return [int(s.strip()) for s in input_str.split() if s.strip()]
+    lines = [s.strip() for s in input_str.splitlines() if s.strip()]
+    return lines
 
 
 def calculate_part1(input_str: str) -> int:
