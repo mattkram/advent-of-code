@@ -51,31 +51,33 @@ def parse(input_str: str) -> tuple[tuple[int, int], dict[tuple[int, int], str]]:
 def trace_path(joints, start, first_step):
     row, col = start
     dx, dy = first_step
-    num_steps = 0
+    path = [start]
     while (joint := joints[row + dx, col + dy]) != "S":
         if (dx, dy) not in TOPO_MAP[joint]:
             raise ValueError("Dead End")
 
         (row, col) = (row + dx, col + dy)
         (dx, dy) = TOPO_MAP[joint][dx, dy]
-        num_steps += 1
-    return num_steps
+        path.append((row, col))
+
+    return path
 
 
 def calculate_part1(input_str: str) -> int:
     start, joints = parse(input_str)  # noqa: F841
 
     # Loop through the four adjacent neighbors to see if there is a joint
-    path_length = 0
+    path = []
     for step in [(-1, 0), (1, 0), (0, 1), (0, -1)]:
         try:
-            path_length = trace_path(joints, start, step)
+            path = trace_path(joints, start, step)
         except (KeyError, ValueError):
             # Either we started where there was no joint, or we hit a dead end
             continue
         else:
             break
 
+    path_length = len(path)
     return path_length // 2 + path_length % 2
 
 
