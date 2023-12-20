@@ -25,6 +25,10 @@ def predict_next(series: list[int]) -> int:
     return result
 
 
+def predict_previous(series: list[int]) -> int:
+    return predict_next(series[::-1])
+
+
 def calculate_part1(input_str: str) -> int:
     data = parse(input_str)  # noqa: F841
     return sum(predict_next(series) for series in data)
@@ -32,7 +36,7 @@ def calculate_part1(input_str: str) -> int:
 
 def calculate_part2(input_str: str) -> int:
     data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    return sum(predict_previous(series) for series in data)
 
 
 def main() -> None:
