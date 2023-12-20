@@ -66,7 +66,7 @@ def calculate_part1(input_str: str) -> int:
     start, joints = parse(input_str)  # noqa: F841
 
     # Loop through the four adjacent neighbors to see if there is a joint
-    path_lengths = []
+    path_length = 0
     for step in [(-1, 0), (1, 0), (0, 1), (0, -1)]:
         try:
             path_length = trace_path(joints, start, step)
@@ -74,10 +74,9 @@ def calculate_part1(input_str: str) -> int:
             # Either we started where there was no joint, or we hit a dead end
             continue
         else:
-            path_lengths.append(path_length)
+            break
 
-    max_length = max(path_lengths)
-    return max_length // 2 + max_length % 2
+    return path_length // 2 + path_length % 2
 
 
 def calculate_part2(input_str: str) -> int:
