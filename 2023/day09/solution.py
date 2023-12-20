@@ -12,20 +12,17 @@ def parse(input_str: str) -> List[int]:
 
 
 def predict_next(series: list[int]) -> int:
-    stack = [series[-1]]
+    result = series[-1]
 
-    diffs = series
     while True:
-        diffs = [b - a for a, b in zip(diffs, diffs[1:])]
+        series = [b - a for a, b in zip(series, series[1:])]
 
-        if all(d == 0 for d in diffs):
-            stack.append(0)
+        if all(d == 0 for d in series):
             break
 
-        last_element = diffs[-1]
-        stack.append(last_element)
+        result += series[-1]
 
-    return sum(stack)
+    return result
 
 
 def calculate_part1(input_str: str) -> int:
