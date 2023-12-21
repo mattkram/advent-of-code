@@ -35,11 +35,11 @@ def count_possibilities(pattern: str, counts: tuple[int, ...]) -> int:
             return 0
         if len(pattern) < counts[0]:
             return 0
-        if any(pattern[i] == "." for i in range(counts[0])):
+        if "." in pattern[: counts[0]]:
+            # The word isn't long enough
             return 0
-        else:
-            # Claim all of them
-            return count_possibilities(pattern[counts[0] :], (0,) + counts[1:])
+        # Claim all of them. Add a leading zero to ensure we handle the next dot.
+        return count_possibilities(pattern[counts[0] :], (0,) + counts[1:])
     elif first == ".":
         if counts and counts[0] == 0:
             # The dot is a word separator, so remove the zero so we are onto the next word
