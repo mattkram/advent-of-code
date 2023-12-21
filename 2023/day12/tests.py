@@ -26,6 +26,20 @@ with INPUTS_FILE.open("r") as fp:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
+        pytest.param("#.#.### 1,1,3", 1),
+        pytest.param(TEST_INPUT.splitlines()[0], 1),
+        pytest.param(TEST_INPUT.splitlines()[1], 4),
+        pytest.param(TEST_INPUT.splitlines()[2], 1),
+        pytest.param(TEST_INPUT.splitlines()[3], 1),
+        pytest.param(TEST_INPUT.splitlines()[4], 4),
+        pytest.param(TEST_INPUT.splitlines()[5], 10),
+        (".###..##.??? 3,2,1", 3),
+        (".###..##..?? 3,2,1", 2),
+        (".###..##..?. 3,2,1", 1),
+        (".###..##...? 3,2,1", 1),
+        (".###.##.???? 3,2,1", 4),
+        (".###.#.#.#.. 3,2,1", 0),
+        ("?###???????? 3,2,1", 10),
         pytest.param(TEST_INPUT, 21, id="test-input"),
         pytest.param(REAL_INPUT, 7718, id="real-data"),
     ],
@@ -37,8 +51,8 @@ def test_part1(input_str: str, expected: int) -> None:
 @pytest.mark.parametrize(
     "input_str,expected",
     [
-        pytest.param(TEST_INPUT, 114, id="test-input"),
-        # pytest.param(REAL_INPUT, 1921197370, id="real-data"),
+        pytest.param(TEST_INPUT, 525152, id="test-input"),
+        pytest.param(REAL_INPUT, 128741994134728, id="real-data"),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:

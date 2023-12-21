@@ -1,4 +1,4 @@
-import itertools
+import functools
 import re
 from pathlib import Path
 
@@ -18,38 +18,41 @@ def parse(input_str: str) -> list[tuple[str, tuple[int, ...]]]:
     return result
 
 
-def count_possibilities(pattern, counts):
-    # Get the index of each "?" in the pattern
-    unknowns = [i for i, v in enumerate(pattern) if v == "?"]
-
-    # The total number of damaged expected ("#") in the pattern
-    total = sum(counts)
-
-    # The number of spaces to fill with a #
-    num_known = sum(v == "#" for v in pattern)
-    num_to_add = total - num_known
-
-    # Iterate through all the combinations where we can substitute # for ?
-    num_possibilities = 0
-    for sub_ind in itertools.combinations(unknowns, num_to_add):
-        tmp_pattern = list(pattern)
-        for i in sub_ind:
-            tmp_pattern[i] = "#"
-        possible_pattern = "".join(tmp_pattern).replace("?", ".")
-
-        # Extract all instances of one or more # in a row
-        segments = DAMAGED_PATTERN.findall(possible_pattern)
-
-        # Check that the lengths are equal to the target, and if so add that as a possibility
-        # This is a silly optimization that cut ~15% off the speed by exiting early instead
-        # of constructing a tuple
-        for s, c in itertools.zip_longest(segments, counts):
-            if len(s) != c:
-                break
+@functools.cache
+def count_possibilities(pattern: str, counts: tuple[int, ...]) -> int:
+    if pattern == "":
+        if counts == tuple() or counts == (0,):
+            # We've exhausted all damaged parts or options, and we're not expecting more
+            return 1
         else:
-            num_possibilities += 1
+            # We're expecting more, but there are no more
+            return 0
 
-    return num_possibilities
+    first = pattern[0]
+    rest = pattern[1:]
+    if first == "#":
+        if (not counts) or counts[0] == 0:
+            return 0
+        if len(pattern) < counts[0]:
+            return 0
+        if any(pattern[i] == "." for i in range(counts[0])):
+            return 0
+        else:
+            # Claim all of them
+            return count_possibilities(pattern[counts[0] :], (0,) + counts[1:])
+    elif first == ".":
+        if counts and counts[0] == 0:
+            # The dot is a word separator, so remove the zero so we are onto the next word
+            return count_possibilities(rest, counts[1:])
+        else:
+            # Just move to the rest of the word
+            return count_possibilities(rest, counts)
+    elif first == "?":  # Could be plain else
+        return count_possibilities("#" + rest, counts) + count_possibilities(
+            "." + rest, counts
+        )
+    else:
+        raise ValueError("Shouldn't get here")
 
 
 def calculate_part1(input_str: str) -> int:
@@ -62,8 +65,14 @@ def calculate_part1(input_str: str) -> int:
 
 
 def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    data = parse(input_str)
+    result = 0
+    for pattern, counts in data:
+        pattern = "?".join([pattern] * 5)
+        counts *= 5
+        result += count_possibilities(pattern, counts)
+
+    return result
 
 
 def main() -> None:
