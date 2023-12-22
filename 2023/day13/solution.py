@@ -13,7 +13,7 @@ def parse(input_str: str) -> list[list[str]]:
     return patterns
 
 
-def find_reflection(pattern: list[str]) -> int | None:
+def find_horizontal_reflection(pattern: list[str]) -> int | None:
     """Find the reflection point horizontally, if it exists, otherwise return None."""
 
     reflect_indexes = [i for i, p in enumerate(pattern[:-1]) if pattern[i + 1] == p]
@@ -34,15 +34,20 @@ def transpose(pattern: list[str]) -> list[str]:
     return result
 
 
+def find_reflection(pattern):
+    if (score := find_horizontal_reflection(transpose(pattern))) is not None:
+        return score
+    if (score := find_horizontal_reflection(pattern)) is not None:
+        return score * 100
+    return 0
+
+
 def calculate_part1(input_str: str) -> int:
     patterns = parse(input_str)
 
     result = 0
     for pattern in patterns:
-        if (score := find_reflection(pattern)) is not None:
-            result += 100 * score
-        elif (score := find_reflection(transpose(pattern))) is not None:
-            result += score
+        result += find_reflection(pattern)
 
     return result
 
