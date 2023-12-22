@@ -38,9 +38,6 @@ def tilt_up(mirror: list[list[Item]]) -> list[list[Item]]:
             mirror[i][j] = Item.EMPTY
             mirror[place_row][j] = Item.ROUND_ROCK
             pass
-        print(f"Row {i}")
-        print_mirror(mirror)
-        # break
 
     return mirror
 
@@ -55,24 +52,9 @@ def count_weight(mirror: list[list[Item]]) -> int:
     return result
 
 
-def print_mirror(mirror):
-    for row in mirror:
-        s = "".join(item.value for item in row)
-        print(s)
-    print()
-
-
 def calculate_part1(input_str: str) -> int:
     mirror = parse(input_str)
-
-    print()
-    print("Initial:")
-    print_mirror(mirror)
     mirror = tilt_up(mirror)
-
-    print("Final:")
-    print_mirror(mirror)
-
     return count_weight(mirror)
 
 
