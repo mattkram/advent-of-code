@@ -57,9 +57,49 @@ def calculate_part1(input_str: str) -> int:
     return count_weight(mirror)
 
 
+def rotate(mirror: list[list[Item]]) -> list[list[Item]]:
+    """Rotate 90 degrees clockwise."""
+    num_rows = len(mirror)
+    num_cols = len(mirror[0])
+    result = [[0 for _ in range(num_rows)] for _ in range(num_cols)]
+    for i, row in enumerate(mirror):
+        for j, item in enumerate(row):
+            new_col = num_rows - i - 1
+            new_row = j
+            result[new_row][new_col] = item
+    return result
+
+
+def calculate_hash(mirror):
+    string = "".join(item.value for row in mirror for item in row)
+    return hash(string)
+
+
 def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    mirror = parse(input_str)
+    num_cycles = 1000000000
+
+    hash_history = []
+    weight_map = {}
+    first_occurrence = -1
+    cycle_length = -1
+    for cycle in range(num_cycles):
+        for _ in range(4):
+            mirror = tilt_up(mirror)
+            mirror = rotate(mirror)
+        h = calculate_hash(mirror)
+        if h in hash_history:
+            first_occurrence = hash_history.index(h)
+            cycle_length = cycle - first_occurrence
+            break
+
+        weight_map[h] = count_weight(mirror)
+        hash_history.append(h)
+
+    index = (num_cycles - first_occurrence - 1) % cycle_length + first_occurrence
+
+    final_hash = hash_history[index]
+    return weight_map[final_hash]
 
 
 def main() -> None:
