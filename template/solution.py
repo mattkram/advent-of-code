@@ -1,11 +1,10 @@
 from pathlib import Path
-from typing import List
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
-def parse(input_str: str) -> List[int]:
+def parse(input_str: str) -> list[int]:
     lines = [s.strip() for s in input_str.splitlines() if s.strip()]
     return lines
 
