@@ -28,13 +28,12 @@ def tilt_up(mirror: list[list[Item]]) -> list[list[Item]]:
             above = [mirror[ii][j] for ii in range(i)]
             non_empty_ind = [ii for ii, aa in enumerate(above) if aa != Item.EMPTY]
             if non_empty_ind:
-                # Place this rock there
+                # Place this rock after the last non-empty space
                 place_row = non_empty_ind[-1] + 1
             else:
+                # Otherwise, stop at top of mirror
                 place_row = 0
 
-            if place_row == i:
-                continue
             mirror[i][j] = Item.EMPTY
             mirror[place_row][j] = Item.ROUND_ROCK
             pass
