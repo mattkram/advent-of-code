@@ -37,42 +37,33 @@ class Beam:
 def calculate_part1(input_str: str) -> int:
     obstructions, dims = parse(input_str)
     energized = set()
-    # print()
     beams = {Beam(position=(-1, 0), velocity=(1, 0))}
     history = set()
     while beams:
         for beam in set(beams):
-            # print(f"Before: {beam.position}")
+            # Move the beam forward
             beam.move()
 
+            # If we've been here before, with same velocity, we've already solved it so
+            # we can remove the beam.
             bh = (beam.position, beam.velocity)
             if bh in history:
                 beams.remove(beam)
                 continue
             history.add(bh)
-            # print(f"After: {beam.position}")
+
+            # If we've exceeded the bounds of the mirror, we can remove the beam.
             if not (0 <= beam.position.x < dims.x and 0 <= beam.position.y < dims.y):
                 beams.remove(beam)
                 continue
 
-            # if beam.been_here_before:
-            #     # print(f"Been here before: {beam}")
-            #     beams.remove(beam)
-            #     continue
-            # if beam.position in energized:
-            #     continue
-
             # No matter where we are, we are energized
             energized.add(beam.position)
-            # print(beam.position)
 
+            # Now we decide what to do based on hitting an obstruction.
             o = obstructions.get(beam.position)
-            if o is None:
-                # The space is empty
-                continue
-            elif o == "|":
+            if o == "|":
                 if beam.velocity.x != 0:
-                    # print("Split the beam")
                     beams.update(
                         {
                             Beam(position=beam.position, velocity=(0, 1)),
@@ -80,12 +71,8 @@ def calculate_part1(input_str: str) -> int:
                         }
                     )
                     beams.remove(beam)
-                # else:
-                #     print("Pass right through")
-                #     pass
             elif o == "-":
                 if beam.velocity.y != 0:
-                    # print("Split the beam")
                     beams.update(
                         {
                             Beam(position=beam.position, velocity=(1, 0)),
@@ -111,16 +98,9 @@ def calculate_part1(input_str: str) -> int:
                     beam.velocity = Coord(x=-1, y=0)
                 else:
                     beam.velocity = Coord(x=1, y=0)
-
-        # print()
-        # for j in range(dims.y):
-        #     for i in range(dims.x):
-        #         if (i, j) in energized:
-        #             print("#", end="")
-        #         else:
-        #             print(obstructions.get((i, j), "."), end="")
-        #     print()
-        # print()
+            else:
+                # The space is empty
+                continue
 
     return len(energized)
 
