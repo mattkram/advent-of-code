@@ -34,9 +34,8 @@ class Beam:
         )
 
 
-def calculate_part1(input_str: str) -> int:
-    obstructions, dims = parse(input_str)
-    beams = {Beam(position=(-1, 0), velocity=(1, 0))}
+def count_energized_from_starting_beam(starting_beam: Beam, obstructions, dims) -> int:
+    beams = {starting_beam}
     history = set()
     while beams:
         for beam in set(beams):
@@ -99,6 +98,12 @@ def calculate_part1(input_str: str) -> int:
                 continue
 
     return len(set(pos for (pos, _) in history))
+
+
+def calculate_part1(input_str: str) -> int:
+    obstructions, dims = parse(input_str)
+    starting_beam = Beam(position=(-1, 0), velocity=(1, 0))
+    return count_energized_from_starting_beam(starting_beam, obstructions, dims)
 
 
 def calculate_part2(input_str: str) -> int:
