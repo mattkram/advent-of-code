@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import re
 from pathlib import Path
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
+STEP_PATTERN = re.compile(r"(\w+)([-=])(\d+)?")
 
 
 def parse(input_str: str) -> list[str]:
@@ -28,26 +31,23 @@ def calculate_part2(input_str: str) -> int:
     sequence = parse(input_str)
     boxes = [[] for _ in range(256)]
     for step in sequence:
-        if m := re.match(r"(\w+)-", step):
+        if m := STEP_PATTERN.match(step):
             label = m.group(1)
-            operation = "-"
-        elif m := re.match(r"(\w+)=(\d+)", step):
-            label = m.group(1)
-            operation = "="
-            focal_length = int(m.group(2))
+            operation = m.group(2)
+            focal_length = m.group(3)
         else:
             raise ValueError("Bad instruction")
-        h = HASH(label)
-        box = boxes[h]
+
+        box = boxes[HASH(label)]
 
         if operation == "-":
             box[:] = [(lbl, fl) for lbl, fl in box if lbl != label]
         elif operation == "=":
-            existing = [i for i, (lbl, fl) in enumerate(box) if lbl == label]
-            if existing:
-                box[existing[0]] = (label, focal_length)
+            lens = (label, int(focal_length))
+            if existing := [i for i, (lbl, fl) in enumerate(box) if lbl == label]:
+                box[existing[0]] = lens
             else:
-                box.append((label, focal_length))
+                box.append(lens)
         else:
             raise ValueError("Bad operation")
 
