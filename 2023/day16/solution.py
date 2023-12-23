@@ -107,8 +107,27 @@ def calculate_part1(input_str: str) -> int:
 
 
 def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    obstructions, dims = parse(input_str)
+    max_energized = 0
+    for y in range(dims.y):
+        for x in [-1, dims.x + 1]:
+            v_x = +1 if x == -1 else -1
+            starting_beam = Beam(position=(x, y), velocity=(v_x, 0))
+            count = count_energized_from_starting_beam(
+                starting_beam, obstructions, dims
+            )
+            max_energized = max(max_energized, count)
+
+    for x in range(dims.x):
+        for y in [-1, dims.y + 1]:
+            v_y = +1 if y == -1 else -1
+            starting_beam = Beam(position=(x, y), velocity=(0, v_y))
+            count = count_energized_from_starting_beam(
+                starting_beam, obstructions, dims
+            )
+            max_energized = max(max_energized, count)
+
+    return max_energized
 
 
 def main() -> None:
