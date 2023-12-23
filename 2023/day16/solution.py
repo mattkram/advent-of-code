@@ -36,13 +36,17 @@ class Beam:
 
 def calculate_part1(input_str: str) -> int:
     obstructions, dims = parse(input_str)
-    energized = set()
     beams = {Beam(position=(-1, 0), velocity=(1, 0))}
     history = set()
     while beams:
         for beam in set(beams):
             # Move the beam forward
             beam.move()
+
+            # If we've exceeded the bounds of the mirror, we can remove the beam.
+            if not (0 <= beam.position.x < dims.x and 0 <= beam.position.y < dims.y):
+                beams.remove(beam)
+                continue
 
             # If we've been here before, with same velocity, we've already solved it so
             # we can remove the beam.
@@ -51,14 +55,6 @@ def calculate_part1(input_str: str) -> int:
                 beams.remove(beam)
                 continue
             history.add(bh)
-
-            # If we've exceeded the bounds of the mirror, we can remove the beam.
-            if not (0 <= beam.position.x < dims.x and 0 <= beam.position.y < dims.y):
-                beams.remove(beam)
-                continue
-
-            # No matter where we are, we are energized
-            energized.add(beam.position)
 
             # Now we decide what to do based on hitting an obstruction.
             o = obstructions.get(beam.position)
@@ -102,7 +98,7 @@ def calculate_part1(input_str: str) -> int:
                 # The space is empty
                 continue
 
-    return len(energized)
+    return len(set(pos for (pos, _) in history))
 
 
 def calculate_part2(input_str: str) -> int:
