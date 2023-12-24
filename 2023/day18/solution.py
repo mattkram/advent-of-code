@@ -5,6 +5,14 @@ from typing import NamedTuple
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 
+DIRECTION_MAP = {
+    "U": (0, +1),
+    "R": (+1, 0),
+    "D": (0, -1),
+    "L": (-1, 0),
+}
+
+
 class Step(NamedTuple):
     direction: str
     distance: int
@@ -24,60 +32,6 @@ def parse(input_str: str) -> list[int]:
         else:
             raise ValueError(f"Couldn't parse line {line}")
     return steps
-
-
-def print_(trench):
-    print(trench)
-
-
-DIRECTION_MAP = {
-    "U": (0, +1),
-    "R": (+1, 0),
-    "D": (0, -1),
-    "L": (-1, 0),
-}
-
-
-def fill(trench):
-    # Make a copy
-    trench = set(trench)
-    outside = set()
-
-    min_x, min_y, max_x, max_y = 0, 0, 0, 0
-    for x, y in trench:
-        min_x = min(min_x, x)
-        max_x = max(max_x, x)
-        min_y = min(min_y, y)
-        max_y = max(max_y, y)
-
-    min_x -= 1
-    min_y -= 1
-    max_x += 1
-    max_y += 1
-
-    frontier = {(min_x, min_y)}
-    while frontier:
-        for f in set(frontier):
-            for dx, dy in [[0, 1], [0, -1], [1, 0], [-1, 0]]:
-                tmp = (f[0] + dx, f[1] + dy)
-                if not (min_x <= tmp[0] <= max_x and min_y <= tmp[1] <= max_y):
-                    continue
-
-                if tmp in outside or tmp in trench:
-                    pass
-                else:
-                    frontier.add(tmp)
-            frontier.remove(f)
-        pass
-
-    return {
-        (x, y)
-        for x in range(min_x, max_x + 1)
-        for y in range(min_y, max_y + 1)
-        if (x, y) in trench or (x, y) not in outside
-    }
-
-    return outside
 
 
 def count_interior_tiles(path):
