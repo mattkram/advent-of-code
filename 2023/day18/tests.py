@@ -46,7 +46,7 @@ def test_part1(input_str: str, expected: int) -> None:
     "input_str,expected",
     [
         pytest.param(TEST_INPUT, 952408144115, id="test-input"),
-        # pytest.param(REAL_INPUT, 1921197370, id="real-data"),
+        pytest.param(REAL_INPUT, 82712746433310, id="real-data"),
     ],
 )
 def test_part2(input_str: str, expected: int) -> None:

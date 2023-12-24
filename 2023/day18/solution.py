@@ -58,24 +58,115 @@ def count_interior_tiles(path):
     return len(enclosed)
 
 
+def calculate_area(points: list[tuple[int, int]]) -> int:
+    """Calculate the area of a polygon, assuming points oriented clockwise"""
+    area = 0
+    for (x_0, y_0), (x_1, y_1) in zip(points, points[1:]):
+        area += (x_1 - x_0) * (y_0 + y_1) // 2
+    return area
+
+
+TURN_MAP = {
+    ("R", "D"): "expand",
+    ("R", "U"): "contract",
+    ("D", "L"): "expand",
+    ("D", "R"): "contract",
+    ("L", "U"): "expand",
+    ("L", "D"): "contract",
+    ("U", "R"): "expand",
+    ("U", "L"): "contract",
+}
+
+
+def calculate_area_from_steps(steps):
+    position = (0, 0)
+    trench = [position]
+    print()
+    prev_ec = "expand"
+    for step, next_step in zip(steps, steps[1:] + [steps[0]]):
+        delta = DIRECTION_MAP[step.direction]
+
+        ec = TURN_MAP[step.direction, next_step.direction]
+
+        distance = step.distance
+        if ec == "expand":
+            distance += 1
+        if prev_ec == "contract":
+            distance -= 1
+        prev_ec = ec
+
+        position = (
+            position[0] + distance * delta[0],
+            position[1] + distance * delta[1],
+        )
+        trench.append(position)
+
+    return calculate_area(trench)
+
+
 def calculate_part1(input_str: str) -> int:
     steps = parse(input_str)
+    return calculate_area_from_steps(steps)
+
+    position = (0, 0)
+    trench = [position]
+    print()
+    prev_ec = "expand"
+    for step, next_step in zip(steps, steps[1:] + [steps[0]]):
+        delta = DIRECTION_MAP[step.direction]
+
+        ec = TURN_MAP[step.direction, next_step.direction]
+
+        distance = step.distance
+        if ec == "expand":
+            distance += 1
+        if prev_ec == "contract":
+            distance -= 1
+        prev_ec = ec
+
+        position = (
+            position[0] + distance * delta[0],
+            position[1] + distance * delta[1],
+        )
+        trench.append(position)
+
+    return calculate_area(trench)
+    num_interior = count_interior_tiles(trench)
+    return len(set(trench)) + num_interior
+
+
+HIDDEN_DIRECTION_MAP = {0: "R", 1: "D", 2: "L", 3: "U"}
+
+
+def derive_encoded_steps(steps: list[Step]) -> list[Step]:
+    new_steps = []
+
+    for step in steps:
+        color = step.color
+        direction = HIDDEN_DIRECTION_MAP[int(color[5])]
+        distance = int(step.color[:5], 16)
+        new_steps.append(Step(direction, distance, color))
+
+    return new_steps
+
+
+def calculate_part2(input_str: str) -> int:
+    steps = parse(input_str)
+
+    steps = derive_encoded_steps(steps)
+    return calculate_area_from_steps(steps)
 
     position = (0, 0)
     trench = [position]
     for step in steps:
         delta = DIRECTION_MAP[step.direction]
-        for d in range(1, step.distance + 1):
-            position = (position[0] + delta[0], position[1] + delta[1])
-            trench.append(position)
+        position = (
+            position[0] + step.distance * delta[0],
+            position[1] + step.distance * delta[1],
+        )
+        trench.append(position)
 
-    num_interior = count_interior_tiles(trench)
-    return len(set(trench)) + num_interior
-
-
-def calculate_part2(input_str: str) -> int:
-    data = parse(input_str)  # noqa: F841
-    raise ValueError("Cannot find an answer")
+    return calculate_area(trench)
 
 
 def main() -> None:
