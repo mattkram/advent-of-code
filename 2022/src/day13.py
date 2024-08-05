@@ -48,7 +48,7 @@ class Result(Exception):
     def __str__(self) -> str:
         if self.result:
             return (
-                f"{(self.level+1) * '  '}- Left side is smaller, "
+                f"{(self.level + 1) * '  '}- Left side is smaller, "
                 "so inputs are in the right order"
             )
         else:
