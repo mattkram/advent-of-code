@@ -3,13 +3,7 @@ import math
 import re
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
-from typing import DefaultDict
-from typing import Dict
-from typing import Generator
-from typing import List
-from typing import NamedTuple
-from typing import Optional
+from typing import Any, DefaultDict, Dict, Generator, List, NamedTuple, Optional
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

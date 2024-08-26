@@ -2,7 +2,6 @@ from pathlib import Path
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 EXPECTED_FIELDS = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"}
 EXPECTED_FIELDS.remove("cid")

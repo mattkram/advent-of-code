@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .solution import apply_maps_to_range
-from .solution import calculate
+from .solution import apply_maps_to_range, calculate
 
 TEST_INPUT = """
     seeds: 79 14 55 13

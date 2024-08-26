@@ -2,9 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .solution import calculate_part1
-from .solution import calculate_part2
-
+from .solution import calculate_part1, calculate_part2
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 with INPUTS_FILE.open("r") as fp:

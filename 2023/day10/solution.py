@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 # A mapping of the allowable (dx, dy) to enter a type of joint from either end

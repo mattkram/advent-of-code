@@ -1,12 +1,8 @@
-from itertools import combinations
-from itertools import product
+from itertools import combinations, product
 from pathlib import Path
-from typing import Any
-from typing import List
-from typing import Set
+from typing import Any, List, Set
 
 import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

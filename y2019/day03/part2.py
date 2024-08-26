@@ -2,8 +2,7 @@ from typing import List
 
 import pytest
 
-from .part1 import load_input_lines
-from .part1 import route_to_pts
+from .part1 import load_input_lines, route_to_pts
 
 
 def get_min_distance_path_length(route_strings: List[str]) -> int:

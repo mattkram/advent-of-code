@@ -1,10 +1,8 @@
 from collections import deque
 from pathlib import Path
-from typing import Deque
-from typing import Dict
+from typing import Deque, Dict
 
 import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

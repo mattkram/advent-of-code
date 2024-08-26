@@ -1,10 +1,6 @@
 import itertools
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import NamedTuple
-from typing import Optional
-from typing import Tuple
+from typing import Dict, List, NamedTuple, Optional, Tuple
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

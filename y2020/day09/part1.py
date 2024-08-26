@@ -4,7 +4,6 @@ from typing import List
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 ParsedInput = List[int]

@@ -2,7 +2,6 @@ from collections import Counter
 
 import pytest
 
-
 INPUT = "245182-790572"
 
 

@@ -1,9 +1,7 @@
 from pathlib import Path
-from typing import List
-from typing import Tuple
+from typing import List, Tuple
 
 import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

@@ -3,7 +3,6 @@ from typing import Dict
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 EXPECTED_FIELDS = {"byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid"}
 EXPECTED_FIELDS.remove("cid")

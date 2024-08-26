@@ -2,7 +2,6 @@ from copy import deepcopy
 from enum import Enum
 from pathlib import Path
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 

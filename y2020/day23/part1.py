@@ -4,7 +4,6 @@ from typing import Deque
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 ParsedInput = Deque[int]

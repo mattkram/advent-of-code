@@ -3,7 +3,6 @@ from pathlib import Path
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 PASSWORD_PATTERN = re.compile(r"(\d+)-(\d+) (\w): (\w+)")
 
