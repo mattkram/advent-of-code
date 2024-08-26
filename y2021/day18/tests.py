@@ -2,11 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .solution import calculate_part1
-from .solution import calculate_part2
-from .solution import Node
-from .solution import parse
-from .solution import reduce
+from .solution import Node, calculate_part1, calculate_part2, parse, reduce
 
 TEST_INPUT = """
 [[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]
@@ -34,7 +30,7 @@ with INPUTS_FILE.open("r") as fp:
         ("[7,[6,[5,[4,[3,2]]]]]", "[7,[6,[5,[7,0]]]]"),
         ("[[6,[5,[4,[3,2]]]],1]", "[[6,[5,[7,0]]],3]"),
         ("[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]"),
-        ("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]")
+        ("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]", "[[3,[2,[8,0]]],[9,[5,[7,0]]]]"),
         # (REAL_INPUT, 50),
     ],
 )

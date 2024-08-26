@@ -3,7 +3,6 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 STEP_PATTERN = re.compile(r"(\w+)([-=])(\d+)?")
 

@@ -3,17 +3,14 @@
 Modified from the version found at: https://github.com/tomswartz07/AdventOfCodeLeaderboard
 
 """
+
 import datetime
 import os
 import random
 import sys
 from collections import defaultdict
 from itertools import zip_longest
-from typing import Any
-from typing import DefaultDict
-from typing import Dict
-from typing import NamedTuple
-from typing import Set
+from typing import Any, DefaultDict, Dict, NamedTuple, Set
 
 import requests
 from dotenv import load_dotenv

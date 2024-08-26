@@ -1,9 +1,7 @@
 import math
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

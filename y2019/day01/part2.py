@@ -1,7 +1,6 @@
 import pytest
 
-from .part1 import get_required_fuel
-from .part1 import load_input_lines
+from .part1 import get_required_fuel, load_input_lines
 
 
 def get_required_fuel_recursive(mass: int) -> int:

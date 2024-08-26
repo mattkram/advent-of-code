@@ -4,7 +4,6 @@ from typing import Dict
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 ParsedInput = Dict[str, Dict[str, int]]

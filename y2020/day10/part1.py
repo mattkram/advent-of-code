@@ -1,9 +1,7 @@
 from pathlib import Path
-from typing import Dict
-from typing import Set
+from typing import Dict, Set
 
 import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

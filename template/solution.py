@@ -1,6 +1,5 @@
 from pathlib import Path
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 

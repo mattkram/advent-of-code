@@ -1,6 +1,4 @@
-from .part1 import load_input_lines
-from .part1 import run_machine
-from .part1 import string_to_machine
+from .part1 import load_input_lines, run_machine, string_to_machine
 
 
 def test_compare_final_answer() -> None:

@@ -1,9 +1,7 @@
 import re
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict
-from typing import Generator
-from typing import Tuple
+from typing import Dict, Generator, Tuple
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

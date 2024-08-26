@@ -1,12 +1,8 @@
-from collections import defaultdict
-from collections import deque
+from collections import defaultdict, deque
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Tuple
+from typing import Dict, List, Tuple
 
 import pytest
-
 
 ParsedInput = List[List[str]]
 Coords = Tuple[int, int]

@@ -2,8 +2,7 @@ from typing import List
 
 import pytest
 
-from .part1 import load_input_lines
-from .part1 import OrbitalMap
+from .part1 import OrbitalMap, load_input_lines
 
 
 def calculate(input_lines: List[str]) -> int:

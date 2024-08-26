@@ -5,7 +5,6 @@ import pytest
 
 from .solution import calculate
 
-
 TEST_INPUT = textwrap.dedent(
     """\
     32T3K 765

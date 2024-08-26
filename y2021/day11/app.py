@@ -1,14 +1,11 @@
 import itertools
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import Tuple
+from typing import Any, Dict, Tuple
 
 from rich.align import Align
 from rich.text import Text
 from textual.app import App
 from textual.widget import Widget
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

@@ -1,8 +1,7 @@
 from __future__ import annotations
 
 import string
-from heapq import heappop
-from heapq import heappush
+from heapq import heappop, heappush
 from pathlib import Path
 
 BASE_DIR = Path(__file__).parents[1]

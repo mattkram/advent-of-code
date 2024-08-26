@@ -1,9 +1,6 @@
-from typing import List
-from typing import Tuple
+from typing import List, Tuple
 
-from .part1 import load_input_lines
-from .part1 import run_machine
-from .part1 import string_to_machine
+from .part1 import load_input_lines, run_machine, string_to_machine
 
 
 def find_machine_noun_and_verb(machine: List[int], target: int) -> Tuple[int, int]:

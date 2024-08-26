@@ -1,10 +1,6 @@
 from pathlib import Path
 from queue import PriorityQueue
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Set
-from typing import Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 INFINITY = 1_000_000_000
 

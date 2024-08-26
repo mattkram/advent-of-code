@@ -3,7 +3,6 @@ from typing import Tuple
 
 import pytest
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 ParsedInput = Tuple[int, int]

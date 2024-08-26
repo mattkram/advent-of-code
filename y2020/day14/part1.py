@@ -1,11 +1,8 @@
 import re
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Union
+from typing import Dict, List, Union
 
 import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

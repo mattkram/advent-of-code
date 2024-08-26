@@ -2,7 +2,6 @@ import functools
 import re
 from pathlib import Path
 
-
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 
 DAMAGED_PATTERN = re.compile(r"#+")

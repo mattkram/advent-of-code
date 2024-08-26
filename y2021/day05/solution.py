@@ -1,9 +1,6 @@
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import NamedTuple
-from typing import Tuple
+from typing import Dict, List, NamedTuple, Tuple
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

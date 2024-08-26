@@ -1,7 +1,6 @@
 import pytest
 
-from .solution import calculate_part1
-from .solution import calculate_part2
+from .solution import calculate_part1, calculate_part2
 
 
 @pytest.mark.parametrize(

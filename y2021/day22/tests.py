@@ -2,8 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from .solution import calculate_part1
-from .solution import calculate_part2
+from .solution import calculate_part1, calculate_part2
 
 TEST_INPUT = """
 on x=-20..26,y=-36..17,z=-47..7

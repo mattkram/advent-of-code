@@ -2,13 +2,9 @@ import itertools
 import math
 import re
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Set
-from typing import Tuple
+from typing import Dict, List, Set, Tuple
 
 import pytest
-
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 

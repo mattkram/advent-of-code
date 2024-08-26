@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-
 TOTAL_DISK_SPACE = 70_000_000
 REQUIRED_DISK_SPACE = 30_000_000
 
