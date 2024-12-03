@@ -5,10 +5,16 @@ program day01
     integer, allocatable, dimension(:,:) :: input_data
     integer :: num_rows, solution_1, solution_2
 
+    ! Test data
     call load_data("test_input.txt", input_data, num_rows, num_cols)
 
     solution_1 = solve_part1(input_data)
     call assert_equal(solution_1, 11)
+
+    solution_2 = solve_part2(input_data)
+    call assert_equal(solution_2, 31)
+
+    ! Reset the allocation
     deallocate(input_data)
 
     call load_data("input.txt", input_data, num_rows, num_cols)
@@ -16,6 +22,11 @@ program day01
     solution_1 = solve_part1(input_data)
 
     print *, "The solution to part 1 is ", solution_1
+    print *
+
+    solution_2 = solve_part2(input_data)
+
+    print *, "The solution to part 2 is ", solution_2
     print *
 
 contains
@@ -85,6 +96,29 @@ contains
             x = x + abs(right(i) - left(i))
         end do
     end function solve_part1
+
+    function solve_part2(input_data) result (x)
+        integer, intent(in), dimension(:,:) :: input_data
+
+        integer, dimension(size(input_data, 1)) :: left, right
+
+        integer :: x
+        integer :: num_rows, i, j
+
+        num_rows = size(input_data, 1)
+
+        left = input_data(:,1)
+        right = input_data(:,2)
+
+        x = 0
+        do i=1,num_rows
+            do j=1,num_rows
+                if (left(i) == right(j)) then
+                    x = x + left(i)
+                end if
+            end do
+        end do
+    end function solve_part2
 
     recursive subroutine quicksort(a, firstin, lastin)
         !
