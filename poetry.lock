@@ -363,7 +363,7 @@ leaderboard = ["requests", "python-dotenv"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "dbf62a38643c2470cfd1cd133a2d90c233ea8d51df7a636ded7899ff25296432"
+content-hash = "4816836a079279ad4b06215505427ff76784f2915eaeb9707b6281cade6fc40b"
 
 [metadata.files]
 appdirs = [
