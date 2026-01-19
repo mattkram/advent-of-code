@@ -5,8 +5,7 @@ import pytest
 
 from .solution import calculate
 
-TEST_INPUT = textwrap.dedent(
-    """\
+TEST_INPUT = textwrap.dedent("""\
     RL
 
     AAA = (BBB, CCC)
@@ -16,10 +15,8 @@ TEST_INPUT = textwrap.dedent(
     EEE = (EEE, EEE)
     GGG = (GGG, GGG)
     ZZZ = (ZZZ, ZZZ)
-    """
-)
-TEST_INPUT_2 = textwrap.dedent(
-    """\
+    """)
+TEST_INPUT_2 = textwrap.dedent("""\
     LR
 
     11A = (11B, XXX)
@@ -30,8 +27,7 @@ TEST_INPUT_2 = textwrap.dedent(
     22C = (22Z, 22Z)
     22Z = (22B, 22B)
     XXX = (XXX, XXX)
-    """
-)
+    """)
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"

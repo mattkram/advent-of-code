@@ -55,8 +55,8 @@ def trace_path(joints, start, first_step):
         if (dx, dy) not in TOPO_MAP[joint]:
             raise ValueError("Dead End")
 
-        (row, col) = (row + dx, col + dy)
-        (dx, dy) = TOPO_MAP[joint][dx, dy]
+        row, col = (row + dx, col + dy)
+        dx, dy = TOPO_MAP[joint][dx, dy]
         path.append((row, col))
 
     return path
@@ -87,7 +87,7 @@ def count_interior_tiles(joints, path):
     enclosed = set()
 
     for curr, next in zip(path, path[1:]):
-        (dx, dy) = (next[0] - curr[0], next[1] - curr[1])
+        dx, dy = (next[0] - curr[0], next[1] - curr[1])
 
         # 90 deg, counter-clockwise
         search_dir = dy, -dx

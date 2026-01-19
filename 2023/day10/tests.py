@@ -5,26 +5,21 @@ import pytest
 
 from .solution import calculate_part1, calculate_part2
 
-TEST_INPUT_1 = textwrap.dedent(
-    """\
+TEST_INPUT_1 = textwrap.dedent("""\
     .....
     .S-7.
     .|.|.
     .L-J.
     .....
-    """
-)
-TEST_INPUT_2 = textwrap.dedent(
-    """\
+    """)
+TEST_INPUT_2 = textwrap.dedent("""\
     ..F7.
     .FJ|.
     SJ.L7
     |F--J
     LJ...
-    """
-)
-TEST_INPUT_3 = textwrap.dedent(
-    """\
+    """)
+TEST_INPUT_3 = textwrap.dedent("""\
     ...........
     .S-------7.
     .|F-----7|.
@@ -34,10 +29,8 @@ TEST_INPUT_3 = textwrap.dedent(
     .|..|.|..|.
     .L--J.L--J.
     ...........
-    """
-)
-TEST_INPUT_4 = textwrap.dedent(
-    """\
+    """)
+TEST_INPUT_4 = textwrap.dedent("""\
     .F----7F7F7F7F-7....
     .|F--7||||||||FJ....
     .||.FJ||||||||L7....
@@ -48,10 +41,8 @@ TEST_INPUT_4 = textwrap.dedent(
     .....|FJLJ|FJ|F7|.LJ
     ....FJL-7.||.||||...
     ....L---J.LJ.LJLJ...
-    """
-)
-TEST_INPUT_5 = textwrap.dedent(
-    """\
+    """)
+TEST_INPUT_5 = textwrap.dedent("""\
     FF7FSF7F7F7F7F7F---7
     L|LJ||||||||||||F--J
     FL-7LJLJ||||||LJL-77
@@ -62,8 +53,7 @@ TEST_INPUT_5 = textwrap.dedent(
     7-L-JL7||F7|L7F-7F7|
     L.L7LFJ|||||FJL7||LJ
     L7JLJL-JLJLJL--JLJ.L
-    """
-)
+    """)
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
 with INPUTS_FILE.open("r") as fp:

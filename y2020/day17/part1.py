@@ -20,7 +20,7 @@ class Board:
         self._cells[index] = value
 
     def get_num_active_neighbors(self, coords: Coordinate) -> int:
-        (x, y, z) = coords
+        x, y, z = coords
         num_neighbors = 0
         for dx, dy, dz in itertools.product([-1, 0, 1], repeat=3):
             if (dx, dy, dz) == (0, 0, 0):
