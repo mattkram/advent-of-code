@@ -5,13 +5,11 @@ import pytest
 
 from .solution import calculate_part1, calculate_part2
 
-TEST_INPUT = textwrap.dedent(
-    """\
+TEST_INPUT = textwrap.dedent("""\
     0 3 6 9 12 15
     1 3 6 10 15 21
     10 13 16 21 30 45
-    """
-)
+    """)
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"

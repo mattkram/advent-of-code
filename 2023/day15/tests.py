@@ -5,11 +5,9 @@ import pytest
 
 from .solution import calculate_part1, calculate_part2
 
-TEST_INPUT = textwrap.dedent(
-    """\
+TEST_INPUT = textwrap.dedent("""\
     rn=1,cm-,qp=3,cm=2,qp-,pc=4,ot=9,ab=5,pc-,pc=6,ot=7
-    """
-)
+    """)
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"

@@ -5,8 +5,7 @@ import pytest
 
 from .solution import calculate_part1, calculate_part2
 
-TEST_INPUT = textwrap.dedent(
-    """\
+TEST_INPUT = textwrap.dedent("""\
     1,0,1~1,2,1
     0,0,2~2,0,2
     0,2,3~2,2,3
@@ -14,8 +13,7 @@ TEST_INPUT = textwrap.dedent(
     2,0,5~2,2,5
     0,1,6~2,1,6
     1,1,8~1,1,9
-    """
-)
+    """)
 
 
 INPUTS_FILE = Path(__file__).parent / "input.txt"
